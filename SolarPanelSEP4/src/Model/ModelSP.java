@@ -1,4 +1,4 @@
-package Modul;
+package Model;
 
 public class ModelSP {
 }
