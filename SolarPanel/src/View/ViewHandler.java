@@ -1,5 +1,6 @@
 package View;
 
+import Modul.ModelSP;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Region;
@@ -29,14 +30,14 @@ public class ViewHandler {
     private MalfunctioningPanelsViewController malfunctioningPanelsViewController;
 
 
-    //  private ModelIMS model;
+
     private Region root;
 
-     /*   public ViewHandler(ModelIMS model)
+     public ViewHandler(ModelSP model)
         {
             this.currentScene = new Scene(new Region());
             this.model = model;
-        }*/
+        }
 
     public void openView(String window) {
         root = null;
