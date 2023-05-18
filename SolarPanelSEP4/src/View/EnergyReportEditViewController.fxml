@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.*?>
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EnergyReportEditViewController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.EnergyReportEditViewController">
    <children>
       <DatePicker fx:id="DatePickerFrom" layoutX="112.0" layoutY="84.0" />
       <DatePicker fx:id="DatePickerTo" layoutX="112.0" layoutY="128.0" />
