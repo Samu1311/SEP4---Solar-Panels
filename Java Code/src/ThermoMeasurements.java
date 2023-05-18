@@ -37,12 +37,12 @@ public class ThermoMeasurements
 
   public int getMeasurement_id()
   {
-    return measurement_id;
+    return series_id;
   }
 
   public void setMeasurement_id(int measurement_id)
   {
-    this.measurement_id = measurement_id;
+    this.series_id = series_id;
   }
 
   public Time getTimestamp()
