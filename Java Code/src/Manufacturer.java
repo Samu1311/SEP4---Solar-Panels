@@ -1,27 +1,23 @@
 public class Manufacturer
 {
-  private int city_id;
   private int manufacturer_id;
   private String name;
   private int phone;
   private String email;
+  private String city_name;
+  private int postal_code;
+  private String country_name;
 
-  public Manufacturer(int city_id, int manufacturer_id, String name, int phone, String email){
-    this.city_id = city_id;
+  public Manufacturer(int manufacturer_id, String name, int phone, String email,
+      String city_name, int postal_code, String country_name)
+  {
     this.manufacturer_id = manufacturer_id;
     this.name = name;
     this.phone = phone;
     this.email = email;
-  }
-
-  public int getCity_id()
-  {
-    return city_id;
-  }
-
-  public void setCity_id(int city_id)
-  {
-    this.city_id = city_id;
+    this.city_name = city_name;
+    this.postal_code = postal_code;
+    this.country_name = country_name;
   }
 
   public int getManufacturer_id()
@@ -63,4 +59,36 @@ public class Manufacturer
   {
     this.email = email;
   }
+
+  public String getCity_name()
+  {
+    return city_name;
+  }
+
+  public void setCity_name(String city_name)
+  {
+    this.city_name = city_name;
+  }
+
+  public int getPostal_code()
+  {
+    return postal_code;
+  }
+
+  public void setPostal_code(int postal_code)
+  {
+    this.postal_code = postal_code;
+  }
+
+  public String getCountry_name()
+  {
+    return country_name;
+  }
+
+  public void setCountry_name(String country_name)
+  {
+    this.country_name = country_name;
+  }
 }
+
+

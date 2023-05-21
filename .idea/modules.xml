@@ -8,7 +8,6 @@
       <module fileurl="file://$PROJECT_DIR$/Server/Server.iml" filepath="$PROJECT_DIR$/Server/Server.iml" />
       <module fileurl="file://$PROJECT_DIR$/Server/src/server/Storage/Storage.iml" filepath="$PROJECT_DIR$/Server/src/server/Storage/Storage.iml" />
       <module fileurl="file://$PROJECT_DIR$/Testing/Testing.iml" filepath="$PROJECT_DIR$/Testing/Testing.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Server/src/persistance/persistance.iml" filepath="$PROJECT_DIR$/Server/src/persistance/persistance.iml" />
       <module fileurl="file://$PROJECT_DIR$/Server/src/server/server.iml" filepath="$PROJECT_DIR$/Server/src/server/server.iml" />
     </modules>
   </component>

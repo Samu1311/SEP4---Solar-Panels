@@ -1,8 +1,7 @@
 import java.sql.Time;
 
-public class ThermoMeasurements
+public class ThermoSeries
 {
-  private Time timestamp;
   private int series_id;
   private int collection_time_period;
   private double collected_water_mass;
@@ -11,18 +10,14 @@ public class ThermoMeasurements
   private double cold_water_temperature;
   private double solar_flux;
   private double water_flow;
-  private double p_out;
-  private double p_in;
   private double efficiency;
 
-  public ThermoMeasurements(int series_id, Time timestamp,
-      int collection_time_period, double collected_water_mass,
-      double outdoor_temperature, double hot_water_temperature,
-      double cold_water_temperature, double solar_flux, double water_flow,
-      double p_out, double p_in, double efficiency)
+  public ThermoSeries(int series_id, int collection_time_period,
+      double collected_water_mass, double outdoor_temperature,
+      double hot_water_temperature, double cold_water_temperature,
+      double solar_flux, double water_flow, double efficiency)
   {
     this.series_id = series_id;
-    this.timestamp = timestamp;
     this.collection_time_period = collection_time_period;
     this.collected_water_mass = collected_water_mass;
     this.outdoor_temperature = outdoor_temperature;
@@ -30,29 +25,17 @@ public class ThermoMeasurements
     this.cold_water_temperature = cold_water_temperature;
     this.solar_flux = solar_flux;
     this.water_flow = water_flow;
-    this.p_out = p_out;
-    this.p_in = p_in;
     this.efficiency = efficiency;
   }
 
-  public int getMeasurement_id()
+  public int getSeries_id()
   {
     return series_id;
   }
 
-  public void setMeasurement_id(int measurement_id)
+  public void setSeries_id(int series_id)
   {
     this.series_id = series_id;
-  }
-
-  public Time getTimestamp()
-  {
-    return timestamp;
-  }
-
-  public void setTimestamp(Time timestamp)
-  {
-    this.timestamp = timestamp;
   }
 
   public int getCollection_time_period()
@@ -123,26 +106,6 @@ public class ThermoMeasurements
   public void setWater_flow(double water_flow)
   {
     this.water_flow = water_flow;
-  }
-
-  public double getP_out()
-  {
-    return p_out;
-  }
-
-  public void setP_out(double p_out)
-  {
-    this.p_out = p_out;
-  }
-
-  public double getP_in()
-  {
-    return p_in;
-  }
-
-  public void setP_in(double p_in)
-  {
-    this.p_in = p_in;
   }
 
   public double getEfficiency()
