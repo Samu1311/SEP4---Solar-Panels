@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.text.Font?>
+
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.SolarPanelEditViewController">
    <children>
       <Label fx:id="LocationLabel" layoutX="138.0" layoutY="83.0" text="Location">
@@ -25,12 +28,12 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <Button fx:id="BackButton" layoutX="14.0" layoutY="347.0" mnemonicParsing="false" text="Back">
+      <Button fx:id="BackButton" layoutX="14.0" layoutY="347.0" mnemonicParsing="false" onAction="#BackPressed" text="Back">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Button fx:id="ButtonDisplay" layoutX="501.0" layoutY="347.0" mnemonicParsing="false" text="Display">
+      <Button fx:id="ButtonDisplay" layoutX="501.0" layoutY="347.0" mnemonicParsing="false" onAction="#DisplayPressed" text="Display">
          <font>
             <Font size="18.0" />
          </font>

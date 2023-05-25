@@ -1,5 +1,4 @@
 package View;
-import Model.ModelSP;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -26,14 +25,14 @@ public class LoginViewController {
     private Label UserIDLabel;
 
 
-    private ModelSP model;
+    private DatabaseConnector databaseConnector;
 
 
 
-    public void init (ViewHandler viewHandler, Region root, ModelSP model){
+    public void init (ViewHandler viewHandler, Region root, DatabaseConnector databaseConnector){
         this.viewHandler = viewHandler;
         this.root = root;
-        this.model = model;
+        this.databaseConnector = databaseConnector;
     }
 
     public Region getRoot() {
