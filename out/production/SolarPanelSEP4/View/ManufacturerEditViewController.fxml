@@ -46,5 +46,6 @@
             <Font size="22.0" />
          </font>
       </Label>
+      <Button fx:id="saveButtton" layoutX="256.0" layoutY="320.0" mnemonicParsing="false" onAction="#saveButtonPressed" prefHeight="32.0" prefWidth="88.0" text="Save" />
    </children>
 </AnchorPane>

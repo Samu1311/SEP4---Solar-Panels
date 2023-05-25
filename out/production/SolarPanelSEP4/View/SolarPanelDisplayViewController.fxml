@@ -31,10 +31,5 @@
             <TableColumn fx:id="SeriesColumn" prefWidth="123.20001220703125" text="Series" />
         </columns>
       </TableView>
-      <Button fx:id="AddButton" layoutX="351.0" layoutY="264.0" mnemonicParsing="false" onAction="#AddPressed" text="Add">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Button>
    </children>
 </AnchorPane>

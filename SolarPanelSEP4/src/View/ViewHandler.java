@@ -1,5 +1,6 @@
 package View;
 
+import DAO.ManufacturerDAO;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Region;
@@ -9,6 +10,7 @@ public class ViewHandler {
     private Scene currentScene;
     private Stage primaryStage;
     private DatabaseConnector databaseConnector;
+    private ManufacturerDAO manufacturerDAO;
 
     private LoginViewController loginViewController;
     private HomeScreenViewController homeScreenViewController;

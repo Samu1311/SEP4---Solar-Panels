@@ -9,9 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ManufacturerDAO {
-    private Connection connection;
+    private static Connection connection;
 
-    public ManufacturerDAO(Connection connection) {
+
+    public ManufacturerDAO(java.sql.Connection connection) {
         this.connection = DatabaseConnector.getConnection();
     }
 
@@ -40,9 +41,9 @@ public class ManufacturerDAO {
 
         return manufacturers;
     }
-    public void insertManufacturer(Manufacturer manufacturer) {
+    public static void insertManufacturer(Manufacturer manufacturer) {
         try {
-            String insertQuery = "INSERT INTO ejby_company.manufacturer (name, phone, email, city_id) VALUES (?, ?, ?, ?)";
+            String insertQuery = "INSERT INTO ejby_company.manufacturer (name, phone, email, city_id)" + "VALUES (?, ?, ?, ?)";
             PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
             insertStatement.setString(1, manufacturer.getName());
             insertStatement.setString(2, manufacturer.getPhone());

@@ -1,4 +1,6 @@
 package View;
+
+import Model.Manufacturer;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -59,18 +61,35 @@ public class ManufacturerEditViewController {
 
 
 
+
     public void init (ViewHandler viewHandler, Region root, DatabaseConnector databaseConnector){
         this.viewHandler = viewHandler;
         this.root = root;
         this.databaseConnector = databaseConnector;
+
     }
     public Region getRoot() {
         return root;
     }
 
-    public void SavePressed(){
+    @FXML
+    public void saveButtonPressed() {
+        String name = NameTextField.getText();
+        String phone = PhoneTextField.getText();
+        String email = EmailTextField.getText();
 
-    }
+
+        Manufacturer manufacturer = new Manufacturer();
+        manufacturer.setName(name);
+        manufacturer.setPhone(phone);
+        manufacturer.setEmail(email);
+
+
+        DatabaseConnector.insertManufacturer(manufacturer);
+
+        viewHandler.openView("ManufacturerDisplayView");
+}
+
     @FXML public void BackPressed(){
         viewHandler.openView("Home Page");
     }

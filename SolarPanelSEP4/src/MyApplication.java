@@ -1,3 +1,4 @@
+import View.DatabaseConnector;
 import View.ViewHandler;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -6,9 +7,9 @@ public class MyApplication extends Application
 {
     public void start(Stage primaryStage)
     {
-        ModelSP model = new ModelSP();
+        DatabaseConnector databaseConnector = new DatabaseConnector();
 
-        ViewHandler view = new ViewHandler(model);
+        ViewHandler view = new ViewHandler(databaseConnector);
         view.start(primaryStage);
     }
 }
