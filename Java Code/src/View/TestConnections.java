@@ -1,3 +1,5 @@
+package View;
+
 public class TestConnections {
   public static void main(String[] args) {
     DatabaseConnector connector = new DatabaseConnector();

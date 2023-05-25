@@ -91,8 +91,6 @@ public class Manufacturer
   {
     this.country_name = country_name;
   }
-
-
 }
 
 
