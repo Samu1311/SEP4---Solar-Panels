@@ -38,9 +38,12 @@ public class ViewHandler {
             this.model = model;
         }
 
+    public ViewHandler(DatabaseConnector databaseConnector)
+    {
 
+    }
 
-    public void openView(String window) {
+  public void openView(String window) {
         root = null;
         switch (window) {
             case "Login Page":
