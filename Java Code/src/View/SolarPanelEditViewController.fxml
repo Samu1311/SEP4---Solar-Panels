@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.*?>
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.SolarPanelEditViewController">
+   <children>
+      <Label fx:id="LocationLabel" layoutX="138.0" layoutY="83.0" text="Location">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="PanelIDLabel" layoutX="139.0" layoutY="204.0" text="Panel ID">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="ModelLabel" layoutX="376.0" layoutY="83.0" text="Model.Model">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="SeriesLabel" layoutX="378.0" layoutY="204.0" text="Series">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Button fx:id="BackButton" layoutX="14.0" layoutY="347.0" mnemonicParsing="false" text="Back">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="ButtonDisplay" layoutX="501.0" layoutY="347.0" mnemonicParsing="false" text="Display">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <TextField fx:id="TextFieldLocation" layoutX="129.0" layoutY="140.0" prefHeight="26.0" prefWidth="86.0" />
+      <TextField fx:id="TextFieldPanel" layoutX="129.0" layoutY="259.0" prefHeight="26.0" prefWidth="86.0" />
+      <TextField fx:id="TextFieldSeries" layoutX="358.0" layoutY="258.0" prefHeight="26.0" prefWidth="86.0" />
+      <TextField fx:id="TextFieldModel" layoutX="358.0" layoutY="140.0" prefHeight="26.0" prefWidth="86.0" />
+   </children>
+</AnchorPane>

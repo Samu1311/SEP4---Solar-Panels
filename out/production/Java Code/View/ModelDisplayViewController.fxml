@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.ModelDisplayViewController">
+    <children>
+        <TableView fx:id="modelTable" layoutX="47.0" layoutY="67.0" prefHeight="200.0" prefWidth="502.0">
+            <columns>
+                <TableColumn fx:id="ModelColumn" minWidth="8.800048828125" prefWidth="106.4000244140625" text="Model.Model " />
+                <TableColumn fx:id="ManufacturerColumn" prefWidth="117.5999755859375" text="Model.Manufacturer" />
+                <TableColumn fx:id="DimensionsColumn" prefWidth="101.60003662109375" text="Dimensions" />
+                <TableColumn fx:id="PriceColumn" prefWidth="87.20001220703125" text="Price" />
+            <TableColumn fx:id="TypeColumn" prefWidth="87.20001220703125" text="Type" />
+            </columns>
+        </TableView>
+        <Slider layoutX="568.0" layoutY="67.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="14.0" />
+        <Button fx:id="EditButton" layoutX="415.0" layoutY="287.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="58.0" text="Edit" />
+        <Button fx:id="DeleteButton" layoutX="488.0" layoutY="287.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="58.0" text="Delete" />
+        <Button fx:id="BackButton" layoutX="269.0" layoutY="339.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="58.0" text="Back" />
+      <Button fx:id="AddButton" layoutX="336.0" layoutY="287.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="58.0" text="Add" />
+    </children>
+</AnchorPane>
