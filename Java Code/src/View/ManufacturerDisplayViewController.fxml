@@ -9,7 +9,7 @@
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.ManufacturerDisplayViewController">
     <TableView fx:id="manufacturerTable" layoutX="37.0" layoutY="57.0" prefHeight="200.0" prefWidth="502.0">
         <columns>
-            <TableColumn fx:id="manufacturerIDColumn" prefWidth="104.0" text="Manufacturer ID" />
+            <TableColumn fx:id="manufacturerIDColumn" prefWidth="104.0" text="Model.Manufacturer ID" />
             <TableColumn fx:id="NameColumn" prefWidth="52.0" text="Name" />
             <TableColumn fx:id="PhoneColumn" prefWidth="60.79998779296875" text="Phone" />
             <TableColumn fx:id="EmailColumn" prefWidth="48.79998779296875" text="Email" />

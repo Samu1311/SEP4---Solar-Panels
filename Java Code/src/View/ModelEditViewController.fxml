@@ -8,12 +8,12 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.ModelEditViewController">
    <children>
-      <Label fx:id="ModelLabel" layoutX="62.0" layoutY="61.0" text="Model">
+      <Label fx:id="ModelLabel" layoutX="62.0" layoutY="61.0" text="Model.Model">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="ManufacturerLabel" layoutX="62.0" layoutY="151.0" text="Manufacturer">
+      <Label fx:id="ManufacturerLabel" layoutX="62.0" layoutY="151.0" text="Model.Manufacturer">
          <font>
             <Font size="18.0" />
          </font>

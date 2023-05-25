@@ -10,8 +10,8 @@
     <children>
         <TableView fx:id="modelTable" layoutX="47.0" layoutY="67.0" prefHeight="200.0" prefWidth="502.0">
             <columns>
-                <TableColumn fx:id="ModelColumn" minWidth="8.800048828125" prefWidth="106.4000244140625" text="Model " />
-                <TableColumn fx:id="ManufacturerColumn" prefWidth="117.5999755859375" text="Manufacturer" />
+                <TableColumn fx:id="ModelColumn" minWidth="8.800048828125" prefWidth="106.4000244140625" text="Model.Model " />
+                <TableColumn fx:id="ManufacturerColumn" prefWidth="117.5999755859375" text="Model.Manufacturer" />
                 <TableColumn fx:id="DimensionsColumn" prefWidth="101.60003662109375" text="Dimensions" />
                 <TableColumn fx:id="PriceColumn" prefWidth="87.20001220703125" text="Price" />
             <TableColumn fx:id="TypeColumn" prefWidth="87.20001220703125" text="Type" />

@@ -1,3 +1,5 @@
+package Model;
+
 public class SolarPanel
 {
   private int solar_panel_id;

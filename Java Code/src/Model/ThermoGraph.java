@@ -1,3 +1,5 @@
+package Model;
+
 public class ThermoGraph
 {
   private String beginning_time;

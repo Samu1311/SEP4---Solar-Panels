@@ -1,3 +1,5 @@
+package Model;
+
 public class Manufacturer
 {
   private int manufacturer_id;
@@ -89,6 +91,8 @@ public class Manufacturer
   {
     this.country_name = country_name;
   }
+
+
 }
 
 

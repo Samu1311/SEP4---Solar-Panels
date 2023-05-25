@@ -1,3 +1,5 @@
+package Model;
+
 public class PvGraph
 {
   private String beginning_time;
