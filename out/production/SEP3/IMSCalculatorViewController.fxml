@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.BubbleChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane prefHeight="425.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.IMSCalculatorViewController">
+   <children>
+      <BubbleChart fx:id="bubbleChart" layoutX="50.0" layoutY="13.0" title="MACS">
+        <xAxis>
+          <NumberAxis fx:id="CSaxis" label="Competitive Strength" nodeOrientation="LEFT_TO_RIGHT" upperBound="5.0" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis fx:id="MAaxis" label="Market Attractiveness" prefHeight="301.0" prefWidth="49.0" side="LEFT" upperBound="5.0" />
+        </yAxis>
+      </BubbleChart>
+      <Button layoutX="14.0" layoutY="385.0" mnemonicParsing="false" onAction="#back" text="Back" />
+   </children>
+</AnchorPane>

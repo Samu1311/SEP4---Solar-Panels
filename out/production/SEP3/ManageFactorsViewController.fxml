@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.*?>
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="514.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.ManageFactorsViewController">
+   <children>
+      <TableView fx:id="quantiTableMA" layoutX="43.0" layoutY="142.0" prefHeight="99.0" prefWidth="233.0">
+        <columns>
+          <TableColumn fx:id="quantiFactorNameMA" prefWidth="75.0" text="Factor" />
+          <TableColumn fx:id="quantiFactorWeightMA" prefWidth="75.0" text="Weight" />
+        </columns>
+      </TableView>
+      <TableView fx:id="quantiTableCS" layoutX="327.0" layoutY="142.0" prefHeight="99.0" prefWidth="233.0">
+         <columns>
+            <TableColumn fx:id="quantiFactorNameCS" prefWidth="75.0" text="Factor" />
+            <TableColumn fx:id="quantiFactorWeightCS" prefWidth="75.0" text="Weight" />
+         </columns>
+      </TableView>
+      <TextField fx:id="textFieldName" layoutX="92.0" layoutY="37.0" prefHeight="33.0" prefWidth="149.0" />
+      <TextField fx:id="textFieldWeight" layoutX="312.0" layoutY="37.0" prefHeight="33.0" prefWidth="149.0" />
+      <Label fx:id="labelFactor" layoutX="41.0" layoutY="43.0" text="Factor:">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelWeight" layoutX="252.0" layoutY="43.0" text="Weight:">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelMA" layoutX="62.0" layoutY="94.0" text="Marketing attractiveness">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelCS" layoutX="346.0" layoutY="94.0" text="Competitive Strenght">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Button fx:id="saveMAbutton" layoutX="43.0" layoutY="386.0" mnemonicParsing="false" onAction="#saveMA" text="Save MA">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="saveCSButton" layoutX="492.0" layoutY="386.0" mnemonicParsing="false" onAction="#saveCS" text="Save CS">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="backButton" layoutX="226.0" layoutY="438.0" mnemonicParsing="false" onAction="#back" text="Back">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="deleteButton" layoutX="327.0" layoutY="438.0" mnemonicParsing="false" onAction="#deleteFactor" text="Delete">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="edit" layoutX="282.0" layoutY="388.0" mnemonicParsing="false" onAction="#editFactor" text="Edit" />
+      <CheckBox fx:id="quantitativeCheck" layoutX="472.0" layoutY="35.0" mnemonicParsing="false" text="Quantitative" />
+      <CheckBox fx:id="qualitativeCheck" layoutX="472.0" layoutY="55.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="87.0" text="Qualitative" />
+      <TableView fx:id="qualiTableMA" layoutX="43.0" layoutY="257.0" prefHeight="99.0" prefWidth="233.0">
+        <columns>
+          <TableColumn fx:id="qualiFactorNameMA" prefWidth="75.0" text="Factor" />
+          <TableColumn fx:id="qualiFactorWeightMA" prefWidth="75.0" text="Weight" />
+        </columns>
+      </TableView>
+      <TableView fx:id="qualiTableCS" layoutX="327.0" layoutY="257.0" prefHeight="99.0" prefWidth="233.0">
+        <columns>
+          <TableColumn fx:id="qualiFactorNameCS" prefWidth="75.0" text="Factor" />
+          <TableColumn fx:id="qualiFactorWeightCS" prefWidth="75.0" text="Weight" />
+        </columns>
+      </TableView>
+      <Label fx:id="percentageLabelMA" layoutX="139.0" layoutY="363.0" text="Label" />
+      <Label fx:id="percentageLabelCS" layoutX="430.0" layoutY="363.0" text="Label" />
+   </children>
+</Pane>
