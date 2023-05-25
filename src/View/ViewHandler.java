@@ -8,13 +8,12 @@ import javafx.stage.Stage;
 public class ViewHandler {
     private Scene currentScene;
     private Stage primaryStage;
-    private ModelSP model;
+    private DatabaseConnector databaseConnector;
 
     private LoginViewController loginViewController;
     private HomeScreenViewController homeScreenViewController;
     private EnergyReportEditViewController energyReportEditViewController;
     private EnergyReportDisplayViewController energyReportDisplayViewController;
-    private AddSeriesViewController addSeriesViewController;
     private PanelSeriesInputViewController panelSeriesInputViewController;
     private PanelSeriesDisplayViewController panelSeriesDisplayViewController;
     private SolarPanelEditViewController solarPanelEditViewController;
@@ -32,16 +31,11 @@ public class ViewHandler {
 
     private Region root;
 
-     public ViewHandler(ModelSP model)
+     public ViewHandler(DatabaseConnector databaseConnector)
         {
             this.currentScene = new Scene(new Region());
-            this.model = model;
+            this.databaseConnector = databaseConnector;
         }
-
-    public ViewHandler(DatabaseConnector databaseConnector)
-    {
-
-    }
 
   public void openView(String window) {
         root = null;
@@ -53,9 +47,6 @@ public class ViewHandler {
                 root = loadHomePageView("HomeScreenViewController.fxml");
                 break;
             // Series
-            case "Add Series":
-                root = loadAddSeriesView("AddSeriesViewController.fxml");
-                break;
             case "Panel Series Display":
                 root = loadPanelSeriesDisplayView("PanelSeriesDisplayViewController.fxml");
                 break;
@@ -132,36 +123,14 @@ public class ViewHandler {
                 FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(getClass().getResource(fxmlFile));
                 loginViewController = loader.getController();
-                loginViewController.init(this, root, model);
+                loginViewController.init(this, root, databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
             try {
                 root = loginViewController.getRoot();
-                loginViewController.init(this, root, model);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return root;
-    }
-
-    private Region loadAddSeriesView(String fxmlFile) {
-        if (addSeriesViewController == null) {
-            try {
-                FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(getClass().getResource(fxmlFile));
-                root = loader.load();
-                addSeriesViewController = loader.getController();
-                addSeriesViewController.init(this, root, model);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                root = addSeriesViewController.getRoot();
-                addSeriesViewController.init(this, root, model);
+                loginViewController.init(this, root, databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -176,14 +145,14 @@ public class ViewHandler {
                 loader.setLocation(getClass().getResource(fxmFile));
                 root = loader.load();
                 homeScreenViewController = loader.getController();
-                homeScreenViewController.init(this, root, model);
+                homeScreenViewController.init(this, root, databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
             try {
                 root = homeScreenViewController.getRoot();
-                homeScreenViewController.init(this, root, model);
+                homeScreenViewController.init(this, root, databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -199,14 +168,16 @@ public class ViewHandler {
                 loader.setLocation(getClass().getResource(fxmFile));
                 root = loader.load();
                 energyReportEditViewController = loader.getController();
-                energyReportEditViewController.init(this, root, model);
+                energyReportEditViewController.init(this, root,
+                    databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
             try {
                 root = energyReportEditViewController.getRoot();
-                energyReportEditViewController.init(this, root, model);
+                energyReportEditViewController.init(this, root,
+                    databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -221,14 +192,16 @@ public class ViewHandler {
                 loader.setLocation(getClass().getResource(fxmFile));
                 root = loader.load();
                 energyReportDisplayViewController = loader.getController();
-                energyReportDisplayViewController.init(this, root, model);
+                energyReportDisplayViewController.init(this, root,
+                    databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
             try {
                 root = energyReportDisplayViewController.getRoot();
-                energyReportDisplayViewController.init(this, root, model);
+                energyReportDisplayViewController.init(this, root,
+                    databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -244,14 +217,16 @@ public class ViewHandler {
                 loader.setLocation(getClass().getResource(fxmFile));
                 root = loader.load();
                 panelSeriesInputViewController = loader.getController();
-                panelSeriesInputViewController.init(this, root, model);
+                panelSeriesInputViewController.init(this, root,
+                    databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
             try {
                 root = panelSeriesInputViewController.getRoot();
-                panelSeriesInputViewController.init(this, root, model);
+                panelSeriesInputViewController.init(this, root,
+                    databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -267,14 +242,16 @@ public class ViewHandler {
                 loader.setLocation(getClass().getResource(fxmFile));
                 root = loader.load();
                 panelSeriesDisplayViewController = loader.getController();
-                panelSeriesDisplayViewController.init(this, root, model);
+                panelSeriesDisplayViewController.init(this, root,
+                    databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
             try {
                 root = panelSeriesDisplayViewController.getRoot();
-                panelSeriesDisplayViewController.init(this, root, model);
+                panelSeriesDisplayViewController.init(this, root,
+                    databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -289,14 +266,14 @@ public class ViewHandler {
                 loader.setLocation(getClass().getResource(fxmFile));
                 root = loader.load();
                 solarPanelEditViewController = loader.getController();
-                solarPanelEditViewController.init(this, root, model);
+                solarPanelEditViewController.init(this, root, databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
             try {
                 root = solarPanelEditViewController.getRoot();
-                solarPanelEditViewController.init(this, root, model);
+                solarPanelEditViewController.init(this, root, databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -311,14 +288,16 @@ public class ViewHandler {
                 loader.setLocation(getClass().getResource(fxmFile));
                 root = loader.load();
                 solarPanelFilterViewController = loader.getController();
-                solarPanelFilterViewController.init(this, root, model);
+                solarPanelFilterViewController.init(this, root,
+                    databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
             try {
                 root = solarPanelFilterViewController.getRoot();
-                solarPanelFilterViewController.init(this, root, model);
+                solarPanelFilterViewController.init(this, root,
+                    databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -333,14 +312,16 @@ public class ViewHandler {
                 loader.setLocation(getClass().getResource(fxmFile));
                 root = loader.load();
                 solarPanelDisplayViewController = loader.getController();
-                solarPanelDisplayViewController.init(this, root, model);
+                solarPanelDisplayViewController.init(this, root,
+                    databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
             try {
                 root = solarPanelDisplayViewController.getRoot();
-                solarPanelDisplayViewController.init(this, root, model);
+                solarPanelDisplayViewController.init(this, root,
+                    databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -355,14 +336,14 @@ public class ViewHandler {
                 loader.setLocation(getClass().getResource(fxmFile));
                 root = loader.load();
                 modelDisplayViewController = loader.getController();
-                modelDisplayViewController.init(this, root, model);
+                modelDisplayViewController.init(this, root, databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
             try {
                 root = modelDisplayViewController.getRoot();
-                modelDisplayViewController.init(this, root, model);
+                modelDisplayViewController.init(this, root, databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -377,14 +358,14 @@ public class ViewHandler {
                 loader.setLocation(getClass().getResource(fxmFile));
                 root = loader.load();
                 modelEditViewController = loader.getController();
-                modelEditViewController.init(this, root, model);
+                modelEditViewController.init(this, root, databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
             try {
                 root = modelEditViewController.getRoot();
-                modelEditViewController.init(this, root, model);
+                modelEditViewController.init(this, root, databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -399,14 +380,16 @@ public class ViewHandler {
                 loader.setLocation(getClass().getResource(fxmFile));
                 root = loader.load();
                 manufacturerDisplayViewController = loader.getController();
-                manufacturerDisplayViewController.init(this, root, model);
+                manufacturerDisplayViewController.init(this, root,
+                    databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
             try {
                 root = manufacturerDisplayViewController.getRoot();
-                manufacturerDisplayViewController.init(this, root, model);
+                manufacturerDisplayViewController.init(this, root,
+                    databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -420,14 +403,16 @@ public class ViewHandler {
                 loader.setLocation(getClass().getResource(fxmFile));
                 root = loader.load();
                 manufacturerEditViewController = loader.getController();
-                manufacturerEditViewController.init(this, root, model);
+                manufacturerEditViewController.init(this, root,
+                    databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
             try {
                 root = manufacturerEditViewController.getRoot();
-                manufacturerEditViewController.init(this, root, model);
+                manufacturerEditViewController.init(this, root,
+                    databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -442,14 +427,16 @@ public class ViewHandler {
                 loader.setLocation(getClass().getResource(fxmFile));
                 root = loader.load();
                 historicalTableEditViewController = loader.getController();
-                historicalTableEditViewController.init(this, root, model);
+                historicalTableEditViewController.init(this, root,
+                    databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
             try {
                 root = historicalTableEditViewController.getRoot();
-                historicalTableEditViewController.init(this, root, model);
+                historicalTableEditViewController.init(this, root,
+                    databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -464,14 +451,16 @@ public class ViewHandler {
                 loader.setLocation(getClass().getResource(fxmFile));
                 root = loader.load();
                 historicalTableDisplayViewController = loader.getController();
-                historicalTableDisplayViewController.init(this, root, model);
+                historicalTableDisplayViewController.init(this, root,
+                    databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
             try {
                 root = historicalTableDisplayViewController.getRoot();
-                historicalTableDisplayViewController.init(this, root, model);
+                historicalTableDisplayViewController.init(this, root,
+                    databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -486,14 +475,16 @@ public class ViewHandler {
                 loader.setLocation(getClass().getResource(fxmFile));
                 root = loader.load();
                 malfunctioningPanelsViewController = loader.getController();
-                malfunctioningPanelsViewController.init(this, root, model);
+                malfunctioningPanelsViewController.init(this, root,
+                    databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
             try {
                 root = malfunctioningPanelsViewController.getRoot();
-                malfunctioningPanelsViewController.init(this, root, model);
+                malfunctioningPanelsViewController.init(this, root,
+                    databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }

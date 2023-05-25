@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Region;
 
 import java.util.List;
@@ -30,13 +31,13 @@ public class ManufacturerDisplayViewController {
     private Button EditButton;
 
     @FXML
-    private TableColumn<Manufacturer, Integer> EmailColumn;
+    private TableColumn<Manufacturer, String> EmailColumn;
 
     @FXML
     private TableColumn<Manufacturer, String> NameColumn;
 
     @FXML
-    private TableColumn<Manufacturer, Integer> PhoneColumn;
+    private TableColumn<Manufacturer, String> PhoneColumn;
 
     @FXML
     private TableColumn< Manufacturer, Integer> PostCodeColumn;
@@ -68,6 +69,10 @@ public class ManufacturerDisplayViewController {
         return root;
     }
 
+    public void initialize() {
+        // Call the method to populate the manufacturer table during initialization
+        populateManufacturerTable();
+    }
     @FXML public void BackPressed(){
         viewHandler.openView("Home Page");
     }
@@ -82,8 +87,18 @@ public class ManufacturerDisplayViewController {
         // Retrieve all manufacturers from the database
         List<Manufacturer> manufacturers = databaseConnector.getAllManufacturers();
 
+        // Set cell value factories for each column to specify how the data should be displayed
+        manufacturerIDColumn.setCellValueFactory(new PropertyValueFactory<>("manufacturer_id"));
+        NameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        PhoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        EmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+        CityColumn.setCellValueFactory(new PropertyValueFactory<>("city_name"));
+        CountryColumn.setCellValueFactory(new PropertyValueFactory<>("country_name"));
+        PostCodeColumn.setCellValueFactory(new PropertyValueFactory<>("postal_code"));
+
         // Populate the manufacturer table with the retrieved data
         manufacturerTable.getItems().setAll(manufacturers);
     }
 
+    // Other methods...
 }

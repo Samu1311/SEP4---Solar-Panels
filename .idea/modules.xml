@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Server/src/persistance/DAO/DAO.iml" filepath="$PROJECT_DIR$/Server/src/persistance/DAO/DAO.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Java Code/Java Code.iml" filepath="$PROJECT_DIR$/Java Code/Java Code.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/SEP4-SolarPanels.iml" filepath="$PROJECT_DIR$/.idea/SEP4-SolarPanels.iml" />
       <module fileurl="file://$PROJECT_DIR$/Server/src/server/Storage/Storage.iml" filepath="$PROJECT_DIR$/Server/src/server/Storage/Storage.iml" />
       <module fileurl="file://$PROJECT_DIR$/Server/src/server/server.iml" filepath="$PROJECT_DIR$/Server/src/server/server.iml" />

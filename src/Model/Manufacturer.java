@@ -4,13 +4,13 @@ public class Manufacturer
 {
   private int manufacturer_id;
   private String name;
-  private int phone;
+  private String phone;
   private String email;
   private String city_name;
   private int postal_code;
   private String country_name;
 
-  public Manufacturer(int manufacturer_id, String name, int phone, String email,
+  public Manufacturer(int manufacturer_id, String name, String phone, String email,
       String city_name, int postal_code, String country_name)
   {
     this.manufacturer_id = manufacturer_id;
@@ -20,6 +20,11 @@ public class Manufacturer
     this.city_name = city_name;
     this.postal_code = postal_code;
     this.country_name = country_name;
+  }
+
+  public Manufacturer()
+  {
+
   }
 
   public int getManufacturer_id()
@@ -42,14 +47,14 @@ public class Manufacturer
     this.name = name;
   }
 
-  public int getPhone()
-  {
-    return phone;
-  }
-
-  public void setPhone(int phone)
+  public void setPhone(String phone)
   {
     this.phone = phone;
+  }
+
+  public String getPhone()
+  {
+    return phone;
   }
 
   public String getEmail()

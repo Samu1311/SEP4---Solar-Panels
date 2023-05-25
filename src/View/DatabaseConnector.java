@@ -1,9 +1,13 @@
 package View;
 
+import Model.Manufacturer;
+
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseConnector {
-  private Connection connection;
+  private static Connection connection;
 
   public DatabaseConnector() {
     String url = "jdbc:postgresql://snuffleupagus.db.elephantsql.com:5432/gnthefri";
@@ -50,7 +54,9 @@ public class DatabaseConnector {
     }
   }
 
-  public void printManufacturersTable() {
+  public List<Manufacturer> getAllManufacturers() {
+    List<Manufacturer> manufacturers = new ArrayList<>();
+
     try {
       // Execute the query to retrieve the manufacturers data
       String query = "SELECT m.manufacturer_id, m.name, m.phone, m.email, c.city, c.postal_code, cn.country " +
@@ -59,11 +65,7 @@ public class DatabaseConnector {
           "JOIN ejby_company.country cn ON c.country_id = cn.country_id";
       ResultSet resultSet = executeQuery(query);
 
-      // Print the table headers
-      System.out.println("Manufacturer ID\tName\t\tPhone\t\tEmail\t\t\tCity\t\tPostal Code\tCountry");
-      System.out.println("------------------------------------------------------------------------------");
-
-      // Iterate through the result set and print the data
+      // Iterate through the result set and create Manufacturer objects
       while (resultSet.next()) {
         int manufacturerId = resultSet.getInt("manufacturer_id");
         String name = resultSet.getString("name");
@@ -73,7 +75,8 @@ public class DatabaseConnector {
         int postalCode = resultSet.getInt("postal_code");
         String country = resultSet.getString("country");
 
-        System.out.printf("%d\t\t%s\t\t%s\t\t%s\t\t%s\t\t%d\t\t%s\n", manufacturerId, name, phone, email, city, postalCode, country);
+        Manufacturer manufacturer = new Manufacturer(manufacturerId, name, phone, email, city, postalCode, country);
+        manufacturers.add(manufacturer);
       }
 
       // Close the result set
@@ -81,6 +84,8 @@ public class DatabaseConnector {
     } catch (SQLException e) {
       e.printStackTrace();
     }
+
+    return manufacturers;
   }
 
   public void printPhotovoltaicSeriesTable() {
@@ -118,8 +123,14 @@ public class DatabaseConnector {
       e.printStackTrace();
     }
   }
-  public void insertManufacturer(String name, String phone, String email, String country, String city) {
+  public static Manufacturer insertManufacturer(Manufacturer manufacturer) {
     try {
+      String name = manufacturer.getName();
+      String phone = manufacturer.getPhone();
+      String email = manufacturer.getEmail();
+      String country = manufacturer.getCountry_name();
+      String city = manufacturer.getCity_name();
+
       // Get the country_id based on the provided country name
       String countryQuery = "SELECT country_id FROM ejby_company.country WHERE country = ?";
       PreparedStatement countryStatement = connection.prepareStatement(countryQuery);
@@ -131,7 +142,7 @@ public class DatabaseConnector {
         countryId = countryResultSet.getInt("country_id");
       } else {
         System.out.println("Country not found: " + country);
-        return;
+        return null;
       }
 
       // Get the city_id and postal_code based on the provided city name
@@ -147,7 +158,7 @@ public class DatabaseConnector {
         postalCode = cityResultSet.getInt("postal_code");
       } else {
         System.out.println("City not found: " + city);
-        return;
+        return null;
       }
 
       // Prepare the SQL statement for inserting a new manufacturer
@@ -169,6 +180,8 @@ public class DatabaseConnector {
           int manufacturerId = generatedKeys.getInt(1);
           System.out.println("New manufacturer row inserted successfully. Manufacturer ID: " + manufacturerId);
           System.out.println("Postal Code: " + postalCode);
+          Manufacturer newManufacturer = new Manufacturer(manufacturerId, name, phone, email, city, postalCode, country);
+          return newManufacturer;
         } else {
           System.out.println("Failed to retrieve generated manufacturer ID.");
         }
@@ -186,6 +199,8 @@ public class DatabaseConnector {
           int manufacturerId = existingManufacturerIdResultSet.getInt("manufacturer_id");
           System.out.println("Manufacturer already exists. Manufacturer ID: " + manufacturerId);
           System.out.println("Postal Code: " + postalCode);
+          Manufacturer existingManufacturer = new Manufacturer(manufacturerId, name, phone, email, city, postalCode, country);
+          return existingManufacturer;
         } else {
           System.out.println("Failed to retrieve existing manufacturer ID.");
         }
@@ -203,6 +218,7 @@ public class DatabaseConnector {
     } catch (SQLException e) {
       e.printStackTrace();
     }
+    return null;
   }
 
   public void closeConnection() {

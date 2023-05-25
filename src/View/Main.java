@@ -1,3 +1,6 @@
+package View;
+
+import View.MyApplication;
 import javafx.application.Application;
 
 public class Main
