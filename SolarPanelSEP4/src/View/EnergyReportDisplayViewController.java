@@ -1,5 +1,4 @@
 package View;
-import Model.ModelSP;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
@@ -30,18 +29,22 @@ public class EnergyReportDisplayViewController {
     private Region root;
     private ViewHandler viewHandler;
 
-    private ModelSP model;
+    private DatabaseConnector databaseConnector;
 
 
 
-    public void init (ViewHandler viewHandler, Region root, ModelSP model){
+    public void init (ViewHandler viewHandler, Region root, DatabaseConnector databaseConnector){
         this.viewHandler = viewHandler;
         this.root = root;
-        this.model = model;
+        this.databaseConnector = databaseConnector;
     }
 
     public Region getRoot() {
         return root;
+    }
+
+    @FXML public void BackPressed(){
+        viewHandler.openView("Home Page");
     }
 
 }

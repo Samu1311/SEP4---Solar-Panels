@@ -1,5 +1,4 @@
 package View;
-import Model.ModelSP;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
@@ -23,8 +22,6 @@ public class HistoricalTableDisplayViewController {
     @FXML
     private TableColumn<?, ?> location;
 
-    @FXML
-    private ModelSP model;
 
     @FXML
     private TableColumn<?, ?>panelID;
@@ -35,16 +32,25 @@ public class HistoricalTableDisplayViewController {
 
 
 
+    private DatabaseConnector databaseConnector;
 
 
-    public void init (ViewHandler viewHandler, Region root, ModelSP model){
+
+    public void init (ViewHandler viewHandler, Region root, DatabaseConnector databaseConnector){
         this.viewHandler = viewHandler;
         this.root = root;
-        this.model = model;
+        this.databaseConnector = databaseConnector;
     }
 
     public Region getRoot() {
         return root;
+    }
+
+    @FXML public void BackPressed(){
+        viewHandler.openView("Home Page");
+    }
+    @FXML public void DisplayPressed(){
+        viewHandler.openView("Panel Series Display");
     }
 }
 

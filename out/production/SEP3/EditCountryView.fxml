@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.*?>
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="514.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.EditCountryViewController">
+    <children>
+        <TableView fx:id="quantiTableMA" layoutX="24.0" layoutY="142.0" prefHeight="99.0" prefWidth="271.0">
+            <columns>
+                <TableColumn fx:id="quantiFactorNameMA" prefWidth="75.0" text="Factor" />
+                <TableColumn fx:id="quantiFactorWeightMA" prefWidth="55.20001220703125" text="Weight" />
+            <TableColumn fx:id="quantiFactorValueMA" prefWidth="68.79998779296875" text="Value" />
+            <TableColumn fx:id="quantiFactorSourceMA" prefWidth="70.20001220703125" text="Source" />
+            </columns>
+        </TableView>
+        <TextField fx:id="textFieldValue" layoutX="98.0" layoutY="39.0" prefHeight="33.0" prefWidth="149.0" />
+        <Label fx:id="labelValue" layoutX="45.0" layoutY="45.0" text="Value:">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Label>
+        <Label fx:id="labelMA" layoutX="62.0" layoutY="94.0" text="Marketing attractiveness">
+            <font>
+                <Font size="18.0" />
+            </font>
+        </Label>
+        <Label fx:id="labelCS" layoutX="346.0" layoutY="94.0" text="Competitive Strenght">
+            <font>
+                <Font size="18.0" />
+            </font>
+        </Label>
+        <Button fx:id="saveMAButton" layoutX="25.0" layoutY="386.0" mnemonicParsing="false" onAction="#saveMA" text="Save MA">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Button>
+        <Button fx:id="saveCSButton" layoutX="508.0" layoutY="386.0" mnemonicParsing="false" onAction="#saveCS" text="Save CS">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Button>
+        <Button fx:id="backButton" layoutX="25.0" layoutY="455.0" mnemonicParsing="false" onAction="#back" text="Back">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Button>
+        <Button fx:id="edit" layoutX="276.0" layoutY="386.0" mnemonicParsing="false" onAction="#editFactor" prefHeight="30.0" prefWidth="48.0" text="Edit" />
+        <CheckBox fx:id="quantitativeCheck" layoutX="489.0" layoutY="35.0" mnemonicParsing="false" text="Quantitative" />
+        <CheckBox fx:id="qualitativeCheck" layoutX="489.0" layoutY="57.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="87.0" text="Qualitative" />
+      <TableView fx:id="qualiTableMA" layoutX="24.0" layoutY="266.0" prefHeight="99.0" prefWidth="271.0">
+         <columns>
+            <TableColumn fx:id="qualiFactorNameMA" prefWidth="75.0" text="Factor" />
+            <TableColumn fx:id="qualiFactorWeightMA" prefWidth="55.20001220703125" text="Weight" />
+            <TableColumn fx:id="qualiFactorValueMA" prefWidth="68.79998779296875" text="Value" />
+            <TableColumn fx:id="qualiFactorSourceMA" prefWidth="70.20001220703125" text="Source" />
+         </columns>
+      </TableView>
+      <TableView fx:id="quantiTableCS" layoutX="312.0" layoutY="142.0" prefHeight="99.0" prefWidth="271.0">
+         <columns>
+            <TableColumn fx:id="quantiFactorNameCS" prefWidth="75.0" text="Factor" />
+            <TableColumn fx:id="quantiFactorWeightCS" prefWidth="55.20001220703125" text="Weight" />
+            <TableColumn fx:id="quantiFactorValueCS" prefWidth="68.79998779296875" text="Value" />
+            <TableColumn fx:id="quantiFactorSourceCS" prefWidth="70.20001220703125" text="Source" />
+         </columns>
+      </TableView>
+      <TableView fx:id="qualiTableCS" layoutX="312.0" layoutY="266.0" prefHeight="99.0" prefWidth="271.0">
+         <columns>
+            <TableColumn fx:id="qualiFactorNameCS" prefWidth="75.0" text="Factor" />
+            <TableColumn fx:id="qualiFactorWeightCS" prefWidth="55.20001220703125" text="Weight" />
+            <TableColumn fx:id="qualiFactorValueCS" prefWidth="68.79998779296875" text="Value" />
+            <TableColumn fx:id="qualiFactorSourceCS" prefWidth="70.20001220703125" text="Source" />
+         </columns>
+      </TableView>
+      <ChoiceBox fx:id="choiceBox" layoutX="271.0" layoutY="39.0" prefHeight="33.0" prefWidth="150.0" />
+    </children>
+</Pane>
