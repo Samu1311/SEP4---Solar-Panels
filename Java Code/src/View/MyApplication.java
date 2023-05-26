@@ -1,3 +1,5 @@
+package View;
+
 import View.DatabaseConnector;
 import View.ViewHandler;
 import javafx.application.Application;

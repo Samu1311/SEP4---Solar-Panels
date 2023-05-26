@@ -15,12 +15,12 @@
             <TableColumn fx:id="EmailColumn" prefWidth="48.79998779296875" text="Email" />
             <TableColumn fx:id="CityColumn" prefWidth="58.39996337890625" text="City" />
             <TableColumn fx:id="CountryColumn" prefWidth="80.800048828125" text="Country" />
-         <TableColumn fx:id="PostCodeColumn" prefWidth="98.39996337890625" text="Post Code" />
+            <TableColumn fx:id="PostCodeColumn" prefWidth="98.39996337890625" text="Post Code" />
         </columns>
     </TableView>
     <Slider fx:id="Slider" layoutX="551.0" layoutY="57.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="14.0" />
     <Button fx:id="EditButton" layoutX="409.0" layoutY="277.0" mnemonicParsing="false" onAction="#EditPressed" prefHeight="26.0" prefWidth="58.0" text="Edit" />
     <Button fx:id="DeleteButton" layoutX="478.0" layoutY="277.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="58.0" text="Delete" />
     <Button fx:id="BackButton" layoutX="259.0" layoutY="329.0" mnemonicParsing="false" onAction="#BackPressed" prefHeight="26.0" prefWidth="58.0" text="Back" />
-   <Button fx:id="AddButton" layoutX="337.0" layoutY="277.0" mnemonicParsing="false" onAction="#AddPressed" prefHeight="26.0" prefWidth="58.0" text="Add" />
+    <Button fx:id="AddButton" layoutX="337.0" layoutY="277.0" mnemonicParsing="false" onAction="#AddPressed" prefHeight="26.0" prefWidth="58.0" text="Add" />
 </AnchorPane>

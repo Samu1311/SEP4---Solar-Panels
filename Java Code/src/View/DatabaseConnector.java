@@ -1,9 +1,13 @@
 package View;
 
+import Model.Manufacturer;
+
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseConnector {
-    private Connection connection;
+    private static Connection connection;
 
     public DatabaseConnector() {
         String url = "jdbc:postgresql://snuffleupagus.db.elephantsql.com:5432/gnthefri";
@@ -26,7 +30,7 @@ public class DatabaseConnector {
         }
     }
 
-    public ResultSet executeQuery(String sql) {
+    public static ResultSet executeQuery(String sql) {
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
@@ -50,7 +54,9 @@ public class DatabaseConnector {
         }
     }
 
-    public void printManufacturersTable() {
+    public static List<Manufacturer> getAllManufacturers() {
+        List<Manufacturer> manufacturers = new ArrayList<>();
+
         try {
             // Execute the query to retrieve the manufacturers data
             String query = "SELECT m.manufacturer_id, m.name, m.phone, m.email, c.city, c.postal_code, cn.country " +
@@ -59,11 +65,7 @@ public class DatabaseConnector {
                     "JOIN ejby_company.country cn ON c.country_id = cn.country_id";
             ResultSet resultSet = executeQuery(query);
 
-            // Print the table headers
-            System.out.println("Manufacturer ID\tName\t\tPhone\t\tEmail\t\t\tCity\t\tPostal Code\tCountry");
-            System.out.println("------------------------------------------------------------------------------");
-
-            // Iterate through the result set and print the data
+            // Iterate through the result set and create Manufacturer objects
             while (resultSet.next()) {
                 int manufacturerId = resultSet.getInt("manufacturer_id");
                 String name = resultSet.getString("name");
@@ -73,7 +75,8 @@ public class DatabaseConnector {
                 int postalCode = resultSet.getInt("postal_code");
                 String country = resultSet.getString("country");
 
-                System.out.printf("%d\t\t%s\t\t%s\t\t%s\t\t%s\t\t%d\t\t%s\n", manufacturerId, name, phone, email, city, postalCode, country);
+                Manufacturer manufacturer = new Manufacturer(manufacturerId, name, phone, email, city, postalCode, country);
+                manufacturers.add(manufacturer);
             }
 
             // Close the result set
@@ -81,6 +84,8 @@ public class DatabaseConnector {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return manufacturers;
     }
 
     public void printPhotovoltaicSeriesTable() {
@@ -119,9 +124,15 @@ public class DatabaseConnector {
         }
     }
 
-    public void insertManufacturer(String name, String phone, String email, String country, String city) {
+    public static Manufacturer insertManufacturer(Manufacturer manufacturer) {
         try {
-            // Get the country_id based on the provided country name
+            String name = manufacturer.getName();
+            String phone = manufacturer.getPhone();
+            String email = manufacturer.getEmail();
+            String country = manufacturer.getCountry_name();
+            String city = manufacturer.getCity_name();
+
+            // Check if the country exists
             String countryQuery = "SELECT country_id FROM ejby_company.country WHERE country = ?";
             PreparedStatement countryStatement = connection.prepareStatement(countryQuery);
             countryStatement.setString(1, country);
@@ -132,23 +143,24 @@ public class DatabaseConnector {
                 countryId = countryResultSet.getInt("country_id");
             } else {
                 System.out.println("Country not found: " + country);
-                return;
+                System.out.println("Please select an existing country.");
+                return null;
             }
 
-            // Get the city_id and postal_code based on the provided city name
-            String cityQuery = "SELECT city_id, postal_code FROM ejby_company.city WHERE city = ?";
+            // Check if the city exists for the given country
+            String cityQuery = "SELECT city_id FROM ejby_company.city WHERE city = ? AND country_id = ?";
             PreparedStatement cityStatement = connection.prepareStatement(cityQuery);
             cityStatement.setString(1, city);
+            cityStatement.setInt(2, countryId);
             ResultSet cityResultSet = cityStatement.executeQuery();
 
             int cityId;
-            int postalCode;
             if (cityResultSet.next()) {
                 cityId = cityResultSet.getInt("city_id");
-                postalCode = cityResultSet.getInt("postal_code");
             } else {
                 System.out.println("City not found: " + city);
-                return;
+                System.out.println("Please select an existing city for the country: " + country);
+                return null;
             }
 
             // Prepare the SQL statement for inserting a new manufacturer
@@ -169,37 +181,36 @@ public class DatabaseConnector {
                 if (generatedKeys.next()) {
                     int manufacturerId = generatedKeys.getInt(1);
                     System.out.println("New manufacturer row inserted successfully. Manufacturer ID: " + manufacturerId);
-                    System.out.println("Postal Code: " + postalCode);
+                    Manufacturer newManufacturer = new Manufacturer(manufacturerId, name, phone, email, city, country);
+                    return newManufacturer;
                 } else {
                     System.out.println("Failed to retrieve generated manufacturer ID.");
                 }
             } else {
-                // Manufacturer with the same key already exists, retrieve the existing manufacturer_id
-                String existingManufacturerIdQuery = "SELECT manufacturer_id FROM ejby_company.manufacturer WHERE name = ? AND phone = ? AND email = ? AND city_id = ?";
-                PreparedStatement existingManufacturerIdStatement = connection.prepareStatement(existingManufacturerIdQuery);
-                existingManufacturerIdStatement.setString(1, name);
-                existingManufacturerIdStatement.setString(2, phone);
-                existingManufacturerIdStatement.setString(3, email);
-                existingManufacturerIdStatement.setInt(4, cityId);
-                ResultSet existingManufacturerIdResultSet = existingManufacturerIdStatement.executeQuery();
-
-                if (existingManufacturerIdResultSet.next()) {
-                    int existingManufacturerId = existingManufacturerIdResultSet.getInt("manufacturer_id");
-                    System.out.println("Manufacturer already exists. Manufacturer ID: " + existingManufacturerId);
-                    System.out.println("Postal Code: " + postalCode);
-                } else {
-                    System.out.println("Failed to retrieve existing manufacturer ID.");
-                }
+                System.out.println("Failed to insert new manufacturer.");
             }
 
-            // Close result sets, statements, and connections
+            // Close result sets and statements
             countryResultSet.close();
-            countryStatement.close();
             cityResultSet.close();
+            countryStatement.close();
             cityStatement.close();
             insertStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
- }
+        }
+  return null;
+    }
+
+    public void closeConnection() {
+        try {
+            if (connection != null) {
+                connection.close();
+                System.out.println("Connection to the database closed successfully.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error while closing the connection. Error message: " + e.getMessage());
+            e.printStackTrace();
+}
 }
 }

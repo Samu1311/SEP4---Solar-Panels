@@ -1,6 +1,6 @@
 package View;
 
-import DAO.ManufacturerDAO;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Region;
@@ -10,7 +10,7 @@ public class ViewHandler {
     private Scene currentScene;
     private Stage primaryStage;
     private DatabaseConnector databaseConnector;
-    private ManufacturerDAO manufacturerDAO;
+
 
     private LoginViewController loginViewController;
     private HomeScreenViewController homeScreenViewController;
@@ -22,7 +22,7 @@ public class ViewHandler {
     private SolarPanelFilterViewController solarPanelFilterViewController;
     private SolarPanelDisplayViewController solarPanelDisplayViewController;
     private ModelEditViewController modelEditViewController;
-    private ModelDisplayViewController modelDisplayViewController;
+   // private ModelDisplayViewController modelDisplayViewController;
     private ManufacturerEditViewController manufacturerEditViewController;
     private ManufacturerDisplayViewController manufacturerDisplayViewController;
     private HistoricalTableEditViewController historicalTableEditViewController;
@@ -86,9 +86,9 @@ public class ViewHandler {
             case "Model Edit":
                 root = loadModelEditView("ModelEditViewController.fxml");
                 break;
-            case "Model Display":
+      /*      case "Model Display":
                 root = loadModelDisplayView("ModelDisplayViewController.fxml");
-                break;
+                break;*/
             // Solar Panels
             case "Solar Panel Edit":
                 root = loadSolarPanelEditView("SolarPanelEditViewController.fxml");
@@ -321,7 +321,7 @@ public class ViewHandler {
         }
         return root;
     }
-
+/*
     private Region loadModelDisplayView(String fxmFile) {
         if (modelDisplayViewController == null) {
             try {
@@ -343,7 +343,7 @@ public class ViewHandler {
         }
         return root;
     }
-
+*/
     private Region loadModelEditView(String fxmFile) {
         if (modelEditViewController == null) {
             try {

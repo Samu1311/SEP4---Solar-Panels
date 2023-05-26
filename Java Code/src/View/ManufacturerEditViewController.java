@@ -77,18 +77,25 @@ public class ManufacturerEditViewController {
         String name = NameTextField.getText();
         String phone = PhoneTextField.getText();
         String email = EmailTextField.getText();
-
+        String city = CityField.getText();
+        String country = CountryField.getText();
+        int postalCode = Integer.parseInt(PostCodeTextField.getText());
 
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setName(name);
         manufacturer.setPhone(phone);
         manufacturer.setEmail(email);
+        manufacturer.setCity_name(city);
+        manufacturer.setCountry_name(country);
+        manufacturer.setPostal_code(postalCode);
+
+        // Insert the manufacturer into the database
+        databaseConnector.insertManufacturer(manufacturer);
+
+    //    viewHandler.openView("ManufacturerDisplayView");
+    }
 
 
-        DatabaseConnector.insertManufacturer(manufacturer);
-
-        viewHandler.openView("ManufacturerDisplayView");
-}
 
     @FXML public void BackPressed(){
         viewHandler.openView("Home Page");

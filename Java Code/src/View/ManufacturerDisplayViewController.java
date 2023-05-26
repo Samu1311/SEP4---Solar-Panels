@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Region;
 
 import java.util.List;
@@ -78,12 +79,27 @@ public class ManufacturerDisplayViewController {
         viewHandler.openView("Manufacturer Edit");
     }
 
+
+    public void initialize() {
+        // Call the method to populate the manufacturer table during initialization
+        populateManufacturerTable();
+}
+
     private void populateManufacturerTable() {
         // Retrieve all manufacturers from the database
         List<Manufacturer> manufacturers = databaseConnector.getAllManufacturers();
 
+        // Set cell value factories for each column to specify how the data should be displayed
+        manufacturerIDColumn.setCellValueFactory(new PropertyValueFactory<>("manufacturer_id"));
+        NameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        PhoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        EmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+        CityColumn.setCellValueFactory(new PropertyValueFactory<>("city_name"));
+        CountryColumn.setCellValueFactory(new PropertyValueFactory<>("country_name"));
+        PostCodeColumn.setCellValueFactory(new PropertyValueFactory<>("postal_code"));
+
         // Populate the manufacturer table with the retrieved data
         manufacturerTable.getItems().setAll(manufacturers);
-    }
+}
 
 }
