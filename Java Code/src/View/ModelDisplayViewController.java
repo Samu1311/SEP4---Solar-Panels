@@ -1,4 +1,4 @@
-//package View;
+/*package View;
 import Model.Manufacturer;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -8,7 +8,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Region;
 
 import java.util.List;
-/*
+
 public class ModelDisplayViewController {
 
     @FXML
@@ -21,19 +21,19 @@ public class ModelDisplayViewController {
     private Button DeleteButton;
 
     @FXML
-  //  private TableColumn<Model, String> DimensionsColumn;
+    //  private TableColumn<Model, String> DimensionsColumn;
 
     @FXML
     private Button EditButton;
 
     @FXML
-  //  private TableColumn<Model, String> ManufacturerColumn;
+    //  private TableColumn<Model, String> ManufacturerColumn;
 
     @FXML
-   // private TableColumn<Model, Integer> ModelColumn;
+    // private TableColumn<Model, Integer> ModelColumn;
 
     @FXML
- //   private TableColumn<Model, Integer> PriceColumn;
+    //   private TableColumn<Model, Integer> PriceColumn;
 
     @FXML
     private TableColumn<Model, String> TypeColumn;
@@ -47,8 +47,7 @@ public class ModelDisplayViewController {
     private DatabaseConnector databaseConnector;
 
 
-
-    public void init (ViewHandler viewHandler, Region root, DatabaseConnector databaseConnector){
+    public void init(ViewHandler viewHandler, Region root, DatabaseConnector databaseConnector) {
         this.viewHandler = viewHandler;
         this.root = root;
         this.databaseConnector = databaseConnector;
@@ -58,14 +57,18 @@ public class ModelDisplayViewController {
         return root;
     }
 
-    @FXML public void BackPressed(){
+    @FXML
+    public void BackPressed() {
         viewHandler.openView("Home Page");
     }
 
-    @FXML  public void AddPressed(){
+    @FXML
+    public void AddPressed() {
         viewHandler.openView("Model Edit");
     }
-    @FXML public void EditPressed(){
+
+    @FXML
+    public void EditPressed() {
         viewHandler.openView("Model Edit");
     }
 
@@ -76,18 +79,18 @@ public class ModelDisplayViewController {
 
     private void populateModelTable() {
         // Retrieve all manufacturers from the database
-        List<Manufacturer> manufacturers = databaseConnector.getAllManufacturers();
+        List<Model> models = databaseConnector.getAllModels();
 
         // Set cell value factories for each column to specify how the data should be displayed
-        manufacturerIDColumn.setCellValueFactory(new PropertyValueFactory<>("manufacturer_id"));
-        NameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        PhoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
-        EmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
-        CityColumn.setCellValueFactory(new PropertyValueFactory<>("city_name"));
-        CountryColumn.setCellValueFactory(new PropertyValueFactory<>("country_name"));
-        PostCodeColumn.setCellValueFactory(new PropertyValueFactory<>("postal_code"));
+        ManufacturerColumn.setCellValueFactory(new PropertyValueFactory<>("manufacturer_name"));
+        ModelColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        DimensionsColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        PriceColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+        TypeColumn.setCellValueFactory(new PropertyValueFactory<>("city_name"));
+
 
         // Populate the manufacturer table with the retrieved data
-        manufacturerTable.getItems().setAll(manufacturers);
+        modelTable.getItems().setAll(models);
     }
+}
 */

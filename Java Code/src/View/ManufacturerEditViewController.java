@@ -19,6 +19,10 @@ public class ManufacturerEditViewController {
     private Label EmailLabel;
 
     @FXML
+    private Button UpdateButton;
+
+
+    @FXML
     private TextField EmailTextField;
 
     @FXML
@@ -91,6 +95,8 @@ public class ManufacturerEditViewController {
 
         // Insert the manufacturer into the database
         databaseConnector.insertManufacturer(manufacturer);
+
+
 
     //    viewHandler.openView("ManufacturerDisplayView");
     }

@@ -6,8 +6,12 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.sql.DriverManager.getConnection;
+
 public class DatabaseConnector {
     private static Connection connection;
+
+
 
     public DatabaseConnector() {
         String url = "jdbc:postgresql://snuffleupagus.db.elephantsql.com:5432/gnthefri";
@@ -15,7 +19,7 @@ public class DatabaseConnector {
         String password = "qUk7llvLAcedh5ggsCeKZ8xJyqGC4sYn";
 
         try {
-            connection = DriverManager.getConnection(url, user, password);
+            connection = getConnection(url, user, password);
         } catch (SQLException e) {
             System.out.println("Connection failed. Error message: " + e.getMessage());
             e.printStackTrace();
@@ -53,9 +57,10 @@ public class DatabaseConnector {
             return -1;
         }
     }
-
+// Manufacturer Methods
     public static List<Manufacturer> getAllManufacturers() {
         List<Manufacturer> manufacturers = new ArrayList<>();
+
 
         try {
             // Execute the query to retrieve the manufacturers data
@@ -202,6 +207,100 @@ public class DatabaseConnector {
   return null;
     }
 
+    public static void deleteManufacturer(Manufacturer manufacturer) {
+        try {
+            int manufacturerId = manufacturer.getManufacturer_id();
+
+            // Prepare the SQL statement for deleting the manufacturer
+            String deleteQuery = "DELETE FROM ejby_company.manufacturer WHERE manufacturer_id = ?";
+            PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
+            deleteStatement.setInt(1, manufacturerId);
+
+            // Execute the delete statement
+            int rowsDeleted = deleteStatement.executeUpdate();
+
+            // Check if the deletion was successful
+            if (rowsDeleted > 0) {
+                System.out.println("Manufacturer deleted successfully from the database.");
+
+                // Remove the manufacturer from the GUI table
+
+            } else {
+                System.out.println("Failed to delete manufacturer from the database.");
+            }
+
+            // Close the delete statement and database connection
+            deleteStatement.close();
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+}
+    }
+
+    public void updateManufacturer(Manufacturer manufacturer) throws SQLException {
+        Connection connection = null;
+        PreparedStatement statement = null;
+
+        try {
+            connection = DriverManager.getConnection(url, username, password);
+
+            String sql = "UPDATE manufacturer SET name = ?, phone = ?, email = ?, city_id = ? WHERE manufacturer_id = ?";
+            statement = connection.prepareStatement(sql);
+
+            statement.setString(1, manufacturer.getName());
+            statement.setString(2, manufacturer.getPhone());
+            statement.setString(3, manufacturer.getEmail());
+            statement.setInt(4, manufacturer.getCity_name());
+            statement.setInt(5, manufacturer.getManufacturerId());
+
+            statement.executeUpdate();
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            if (connection != null) {
+                connection.close();
+ }
+}
+    }
+
+    // Model Methods
+/*
+    public static List<Model> getAllModels() {
+        List<Model> models = new ArrayList<>();
+
+        try {
+            // Execute the query to retrieve the manufacturers data
+            String query = "SELECT m.manufacturer_id, m.name, m.phone, m.email, c.city, c.postal_code, cn.country " +
+                    "FROM ejby_company.manufacturer m " +
+                    "JOIN ejby_company.city c ON m.city_id = c.city_id " +
+                    "JOIN ejby_company.country cn ON c.country_id = cn.country_id";
+            ResultSet resultSet = executeQuery(query);
+
+            // Iterate through the result set and create Manufacturer objects
+            while (resultSet.next()) {
+                int manufacturerId = resultSet.getInt("model_id");
+                String name = resultSet.getString("manufacturer_name");
+                String phone = resultSet.getString("phone");
+                String email = resultSet.getString("email");
+                String city = resultSet.getString("city");
+                int postalCode = resultSet.getInt("postal_code");
+                String country = resultSet.getString("country");
+
+                Model model = new Model(manufacturerId, name, phone, email, city, postalCode, country);
+                models.add(model);
+            }
+
+            // Close the result set
+            resultSet.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return models;
+    }
+*/
     public void closeConnection() {
         try {
             if (connection != null) {

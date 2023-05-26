@@ -57,6 +57,7 @@ public class Manufacturer
   public void setPhone(String phone)
   {
     this.phone = phone;
+
   }
 
   public String getEmail()

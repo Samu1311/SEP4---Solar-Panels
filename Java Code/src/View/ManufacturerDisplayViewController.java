@@ -1,5 +1,6 @@
 package View;
 import Model.Manufacturer;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
@@ -8,6 +9,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Region;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class ManufacturerDisplayViewController {
@@ -56,6 +58,7 @@ public class ManufacturerDisplayViewController {
 
 
     private DatabaseConnector databaseConnector;
+    List<Manufacturer> manufacturers ;
 
 
 
@@ -87,7 +90,7 @@ public class ManufacturerDisplayViewController {
 
     private void populateManufacturerTable() {
         // Retrieve all manufacturers from the database
-        List<Manufacturer> manufacturers = databaseConnector.getAllManufacturers();
+         manufacturers = databaseConnector.getAllManufacturers();
 
         // Set cell value factories for each column to specify how the data should be displayed
         manufacturerIDColumn.setCellValueFactory(new PropertyValueFactory<>("manufacturer_id"));
@@ -101,5 +104,17 @@ public class ManufacturerDisplayViewController {
         // Populate the manufacturer table with the retrieved data
         manufacturerTable.getItems().setAll(manufacturers);
 }
+    @FXML
+    private void deletePressed() {
+        // Get the selected manufacturer from the table view
+        Manufacturer selectedManufacturer = manufacturerTable.getSelectionModel().getSelectedItem();
 
+        if (selectedManufacturer != null) {
+            // Delete the selected manufacturer from the database and remove it from the table view
+            databaseConnector.deleteManufacturer(selectedManufacturer);
+
+            // Refresh the manufacturer table view
+            populateManufacturerTable();
+}
+    }
 }
