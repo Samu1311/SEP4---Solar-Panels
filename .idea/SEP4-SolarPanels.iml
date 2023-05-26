@@ -3,25 +3,34 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$" />
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="liberica-17" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/Desktop/Courses/SEP/SEP4/SQL-Java Drivers/postgresql-42.2.11.jar!/" />
+          <root url="jar://C:/Program Files/Software-A22/Code/postgresql-42.2.5.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/Desktop/Courses/SEP/SEP4/SQL-Java Drivers/MyDatabase.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/MyDatabase.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$USER_HOME$/Desktop/Courses/SEP/SEP4/SQL-Java Drivers/MyDatabase.jar!/doc" />
+          <root url="jar://$USER_HOME$/Downloads/MyDatabase.jar!/doc" />
         </JAVADOC>
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Program Files/Software-A22/Code/postgresql-42.2.11 (1).jar!/" />
+        </CLASSES>
+        <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
