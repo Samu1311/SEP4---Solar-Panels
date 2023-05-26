@@ -26,7 +26,23 @@ public class Manufacturer
 
   }
 
-  public Manufacturer(int manufacturerId, String name, String phone, String email, String city, String country) {
+  public Manufacturer(int manufacturer_id, String name, String phone, String email,
+                      String city_name, String country_name)
+  {
+    this.manufacturer_id = manufacturer_id;
+    this.name = name;
+    this.phone = phone;
+    this.email = email;
+    this.city_name = city_name;
+    this.country_name = country_name;
+  }
+
+  public Manufacturer(String name, String phone, String email, String city_name, String country_name) {
+    this.name = name;
+    this.phone = phone;
+    this.email = email;
+    this.city_name = city_name;
+    this.country_name = country_name;
   }
 
   public int getManufacturer_id()

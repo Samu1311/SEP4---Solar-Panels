@@ -11,7 +11,7 @@ import static java.sql.DriverManager.getConnection;
 public class DatabaseConnector {
     private static Connection connection;
 
-
+    private int transactionItemId;
 
     public DatabaseConnector() {
         String url = "jdbc:postgresql://snuffleupagus.db.elephantsql.com:5432/gnthefri";
@@ -56,6 +56,32 @@ public class DatabaseConnector {
             e.printStackTrace();
             return -1;
         }
+    }
+
+    public void setTransactionItemId(int itemId) {
+        this.transactionItemId = itemId;
+    }
+
+    public int getTransactionItemId() {
+        return transactionItemId;
+}
+
+    private static int getCityId(String city, String country) throws SQLException {
+        String query = "SELECT city_id FROM ejby_company.city WHERE city = ? AND country_id = (SELECT country_id FROM ejby_company.country WHERE country = ?)";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, city);
+        statement.setString(2, country);
+        ResultSet resultSet = statement.executeQuery();
+
+        int cityId = -1;
+        if (resultSet.next()) {
+            cityId = resultSet.getInt("city_id");
+        }
+
+        resultSet.close();
+        statement.close();
+
+        return cityId;
     }
 // Manufacturer Methods
     public static List<Manufacturer> getAllManufacturers() {
@@ -168,44 +194,42 @@ public class DatabaseConnector {
                 return null;
             }
 
-            // Prepare the SQL statement for inserting a new manufacturer
-            String insertQuery = "INSERT INTO ejby_company.manufacturer (name, phone, email, city_id) VALUES (?, ?, ?, ?)";
-            PreparedStatement insertStatement = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
-            insertStatement.setString(1, name);
-            insertStatement.setString(2, phone);
-            insertStatement.setString(3, email);
-            insertStatement.setInt(4, cityId);
+                    // Prepare the SQL statement for inserting a new manufacturer
+                    String insertQuery = "INSERT INTO ejby_company.manufacturer (name, phone, email, city_id) " +
+                            "SELECT ?, ?, ?, city.city_id " +
+                            "FROM ejby_company.city " +
+                            "INNER JOIN ejby_company.country ON city.country_id = country.country_id " +
+                            "WHERE city.city = ? AND country.country = ? " +
+                            "ON CONFLICT DO NOTHING " +
+                            "RETURNING manufacturer_id";
+                    PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
+                    insertStatement.setString(1, name);
+                    insertStatement.setString(2, phone);
+                    insertStatement.setString(3, email);
+                    insertStatement.setString(4, city);
+                    insertStatement.setString(5, country);
 
-            // Execute the SQL statement
-            int affectedRows = insertStatement.executeUpdate();
+                    // Execute the SQL statement
+                    ResultSet generatedKeys = insertStatement.executeQuery();
 
-            // Check if the insertion was successful
-            if (affectedRows > 0) {
-                // Retrieve the generated key
-                ResultSet generatedKeys = insertStatement.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    int manufacturerId = generatedKeys.getInt(1);
-                    System.out.println("New manufacturer row inserted successfully. Manufacturer ID: " + manufacturerId);
-                    Manufacturer newManufacturer = new Manufacturer(manufacturerId, name, phone, email, city, country);
-                    return newManufacturer;
-                } else {
-                    System.out.println("Failed to retrieve generated manufacturer ID.");
+                    // Check if the insertion was successful
+                    if (generatedKeys.next()) {
+                        int manufacturerId = generatedKeys.getInt("manufacturer_id");
+                        System.out.println("New manufacturer row inserted successfully. Manufacturer ID: " + manufacturerId);
+                        Manufacturer newManufacturer = new Manufacturer(manufacturerId, name, phone, email, city, country);
+                        return newManufacturer;
+                    } else {
+                        System.out.println("Failed to insert new manufacturer.");
+                    }
+
+                    // Close result sets and statements
+                    generatedKeys.close();
+                    insertStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
-            } else {
-                System.out.println("Failed to insert new manufacturer.");
-            }
-
-            // Close result sets and statements
-            countryResultSet.close();
-            cityResultSet.close();
-            countryStatement.close();
-            cityStatement.close();
-            insertStatement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
   return null;
-    }
+            }
 
     public static void deleteManufacturer(Manufacturer manufacturer) {
         try {
@@ -238,33 +262,38 @@ public class DatabaseConnector {
 }
     }
 
-    public void updateManufacturer(Manufacturer manufacturer) throws SQLException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-
+    public static boolean updateManufacturer(Manufacturer manufacturer) {
         try {
-            connection = DriverManager.getConnection(url, username, password);
+            int manufacturerId = manufacturer.getManufacturer_id();
+            String name = manufacturer.getName();
+            String phone = manufacturer.getPhone();
+            String email = manufacturer.getEmail();
+            String country = manufacturer.getCountry_name();
+            String city = manufacturer.getCity_name();
 
-            String sql = "UPDATE manufacturer SET name = ?, phone = ?, email = ?, city_id = ? WHERE manufacturer_id = ?";
-            statement = connection.prepareStatement(sql);
+            // Fetch the city_id based on the updated city name
+            int cityId = getCityId(city, country);
 
-            statement.setString(1, manufacturer.getName());
-            statement.setString(2, manufacturer.getPhone());
-            statement.setString(3, manufacturer.getEmail());
-            statement.setInt(4, manufacturer.getCity_name());
-            statement.setInt(5, manufacturer.getManufacturerId());
-
-            statement.executeUpdate();
-        } finally {
-            if (statement != null) {
-                statement.close();
+            if (cityId != -1) {
+                // Manufacturer exists, perform update
+                String updateQuery = "UPDATE ejby_company.manufacturer SET name = ?, phone = ?, email = ?, city_id = ? WHERE manufacturer_id = ?";
+                PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+                updateStatement.setString(1, name);
+                updateStatement.setString(2, phone);
+                updateStatement.setString(3, email);
+                updateStatement.setInt(4, cityId);
+                updateStatement.setInt(5, manufacturerId);
+                updateStatement.executeUpdate();
+                System.out.println("Manufacturer updated successfully.");
+                updateStatement.close();
+            } else {
+                System.out.println("City not found: " + city + " in country: " + country);
             }
-            if (connection != null) {
-                connection.close();
- }
+        } catch (SQLException e) {
+            e.printStackTrace();
 }
+        return true;
     }
-
     // Model Methods
 /*
     public static List<Model> getAllModels() {

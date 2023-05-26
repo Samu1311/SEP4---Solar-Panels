@@ -66,6 +66,8 @@ public class ManufacturerDisplayViewController {
         this.viewHandler = viewHandler;
         this.root = root;
         this.databaseConnector = databaseConnector;
+        manufacturerTable.setEditable(true);
+        initialize();
     }
 
     public Region getRoot() {
@@ -78,17 +80,30 @@ public class ManufacturerDisplayViewController {
     @FXML public void AddPressed(){
         viewHandler.openView("Manufacturer Edit");
     }
-    @FXML public void EditPressed(){
-        viewHandler.openView("Manufacturer Edit");
-    }
+    @FXML public void EditPressed() {
+        // Get the selected Manufacturer from the table view
+        /*Manufacturer selectedManufacturer = manufacturerTable.getSelectionModel().getSelectedItem();
 
+        // Check if a Manufacturer is selected
+        if (selectedManufacturer != null) {
+            // Store the manufacturer_id in the transactionItemId variable
+            int manufacturerId = selectedManufacturer.getManufacturer_id();
+            DatabaseConnector databaseConnector = new DatabaseConnector();
+            databaseConnector.setTransactionItemId(manufacturerId);
+
+            viewHandler.openView("Manufacturer Edit");*/
+        if(manufacturerTable != null){
+            manufacturerTable.setEditable(true);
+        }
+
+    }
 
     public void initialize() {
         // Call the method to populate the manufacturer table during initialization
         populateManufacturerTable();
 }
 
-    private void populateManufacturerTable() {
+    public void populateManufacturerTable() {
         // Retrieve all manufacturers from the database
          manufacturers = databaseConnector.getAllManufacturers();
 
@@ -118,3 +133,4 @@ public class ManufacturerDisplayViewController {
 }
     }
 }
+
