@@ -41,6 +41,6 @@
       </Button>
       <ComboBox fx:id="FromComboBox" layoutX="101.0" layoutY="118.0" prefWidth="150.0" />
       <ComboBox fx:id="ToComboBox" layoutX="101.0" layoutY="154.0" prefWidth="150.0" />
-      <ChoiceBox fx:id="TypeComboBox" layoutX="104.0" layoutY="253.0" prefWidth="150.0" />
+      <ChoiceBox fx:id="TypeChoiceBox" layoutX="104.0" layoutY="253.0" prefWidth="150.0" />
    </children>
 </AnchorPane>

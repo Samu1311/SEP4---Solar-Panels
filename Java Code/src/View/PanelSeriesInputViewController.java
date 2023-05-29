@@ -1,4 +1,5 @@
 package View;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -17,7 +18,7 @@ public class PanelSeriesInputViewController {
     private Button DisplayButton;
 
     @FXML
-    private ComboBox<?> FromComboBox;
+    private ComboBox<Integer> FromComboBox;
 
     @FXML
     private Label FromLabel;
@@ -29,33 +30,66 @@ public class PanelSeriesInputViewController {
     private Label PanelTypeLabel;
 
     @FXML
-    private ComboBox<?> ToComboBox;
+    private ComboBox<Integer> ToComboBox;
 
     @FXML
     private Label ToLabel;
 
     @FXML
-    private ChoiceBox<?> TypeComboBox;
+    private ChoiceBox<String> TypeChoiceBox;
 
     private DatabaseConnector databaseConnector;
 
-
-
-    public void init (ViewHandler viewHandler, Region root, DatabaseConnector databaseConnector){
+    public void init(ViewHandler viewHandler, Region root, DatabaseConnector databaseConnector) {
         this.viewHandler = viewHandler;
         this.root = root;
         this.databaseConnector = databaseConnector;
+
+        // Set the options for the TypeChoiceBox
+        TypeChoiceBox.getItems().addAll("Thermo", "Photovoltaic");
+
+        // Set an event listener for the TypeChoiceBox selection change
+        TypeChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            // Update the range for the FromComboBox and ToComboBox based on the selected series type
+            updateRange(newValue);
+        });
+    }
+
+    private void updateRange(String seriesType) {
+        // Clear the existing options
+        FromComboBox.getItems().clear();
+        ToComboBox.getItems().clear();
+
+        // Get the range of series based on the selected series type
+        int minSeriesId = databaseConnector.getMinSeriesId(seriesType);
+        int maxSeriesId = databaseConnector.getMaxSeriesId(seriesType);
+
+        // Set the range options in the FromComboBox and ToComboBox
+        for (int i = minSeriesId; i <= maxSeriesId; i++) {
+            FromComboBox.getItems().add(i);
+            ToComboBox.getItems().add(i);
+        }
+
+        // Select the first option as the default
+        if (!FromComboBox.getItems().isEmpty()) {
+            FromComboBox.getSelectionModel().selectFirst();
+        }
+        if (!ToComboBox.getItems().isEmpty()) {
+            ToComboBox.getSelectionModel().selectFirst();
+        }
     }
 
     public Region getRoot() {
         return root;
     }
 
-    @FXML public void BackPressed(){
+    @FXML
+    public void BackPressed() {
         viewHandler.openView("Home Page");
     }
-    @FXML public void DisplayPressed(){
+
+    @FXML
+    public void DisplayPressed() {
         viewHandler.openView("Panel Series Display");
     }
 }
-

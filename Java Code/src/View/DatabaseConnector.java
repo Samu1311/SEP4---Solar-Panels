@@ -4,14 +4,16 @@ import Model.Manufacturer;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.sql.DriverManager.getConnection;
 
 public class DatabaseConnector {
     private static Connection connection;
-
     private int transactionItemId;
+    private Map<String, String> tableNames;
 
     public DatabaseConnector() {
         String url = "jdbc:postgresql://snuffleupagus.db.elephantsql.com:5432/gnthefri";
@@ -20,10 +22,17 @@ public class DatabaseConnector {
 
         try {
             connection = getConnection(url, user, password);
+            initializeTableNames();
         } catch (SQLException e) {
             System.out.println("Connection failed. Error message: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    private void initializeTableNames() {
+        tableNames = new HashMap<>();
+        tableNames.put("Thermo", "ejby_company.thermo_series");
+        tableNames.put("Photovoltaic", "ejby_company.pv_series");
     }
 
     public void testConnection() {
@@ -117,42 +126,6 @@ public class DatabaseConnector {
         }
 
         return manufacturers;
-    }
-
-    public void printPhotovoltaicSeriesTable() {
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(
-                    "SELECT s.series_id, p.voltage, p.current, p.resistance, p.solar_flux, p.efficiency " +
-                            "FROM ejby_company.series s " +
-                            "JOIN ejby_company.pv_measurements p ON s.series_id = p.series_id " +
-                            "JOIN ( " +
-                            "   SELECT series_id, MAX(date || ' ' || time) AS max_datetime " +
-                            "   FROM ejby_company.pv_measurements " +
-                            "   GROUP BY series_id " +
-                            ") m ON p.series_id = m.series_id AND (p.date || ' ' || p.time) = m.max_datetime"
-            );
-
-            System.out.println("Series ID\tVoltage\t\tCurrent\t\tResistance\tSolar Flux\tEfficiency");
-            System.out.println("---------------------------------------------------------------");
-
-            while (resultSet.next()) {
-                int seriesId = resultSet.getInt("series_id");
-                double voltage = resultSet.getDouble("voltage");
-                double current = resultSet.getDouble("current");
-                double resistance = resultSet.getDouble("resistance");
-                double solarFlux = resultSet.getDouble("solar_flux");
-                double efficiency = resultSet.getDouble("efficiency");
-
-                System.out.printf("%d\t\t%.2f\t\t%.2f\t\t%.2f\t\t%.2f\t\t%.2f\n",
-                        seriesId, voltage, current, resistance, solarFlux, efficiency);
-            }
-
-            resultSet.close();
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     public static Manufacturer insertManufacturer(Manufacturer manufacturer) {
@@ -294,42 +267,85 @@ public class DatabaseConnector {
 }
         return true;
     }
-    // Model Methods
-/*
-    public static List<Model> getAllModels() {
-        List<Model> models = new ArrayList<>();
 
+    //Series Methods
+    public void printPhotovoltaicSeriesTable() {
         try {
-            // Execute the query to retrieve the manufacturers data
-            String query = "SELECT m.manufacturer_id, m.name, m.phone, m.email, c.city, c.postal_code, cn.country " +
-                    "FROM ejby_company.manufacturer m " +
-                    "JOIN ejby_company.city c ON m.city_id = c.city_id " +
-                    "JOIN ejby_company.country cn ON c.country_id = cn.country_id";
-            ResultSet resultSet = executeQuery(query);
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(
+                "SELECT s.series_id, p.voltage, p.current, p.resistance, p.solar_flux, p.efficiency " +
+                    "FROM ejby_company.series s " +
+                    "JOIN ejby_company.pv_measurements p ON s.series_id = p.series_id " +
+                    "JOIN ( " +
+                    "   SELECT series_id, MAX(date || ' ' || time) AS max_datetime " +
+                    "   FROM ejby_company.pv_measurements " +
+                    "   GROUP BY series_id " +
+                    ") m ON p.series_id = m.series_id AND (p.date || ' ' || p.time) = m.max_datetime"
+            );
 
-            // Iterate through the result set and create Manufacturer objects
+            System.out.println("Series ID\tVoltage\t\tCurrent\t\tResistance\tSolar Flux\tEfficiency");
+            System.out.println("---------------------------------------------------------------");
+
             while (resultSet.next()) {
-                int manufacturerId = resultSet.getInt("model_id");
-                String name = resultSet.getString("manufacturer_name");
-                String phone = resultSet.getString("phone");
-                String email = resultSet.getString("email");
-                String city = resultSet.getString("city");
-                int postalCode = resultSet.getInt("postal_code");
-                String country = resultSet.getString("country");
+                int seriesId = resultSet.getInt("series_id");
+                double voltage = resultSet.getDouble("voltage");
+                double current = resultSet.getDouble("current");
+                double resistance = resultSet.getDouble("resistance");
+                double solarFlux = resultSet.getDouble("solar_flux");
+                double efficiency = resultSet.getDouble("efficiency");
 
-                Model model = new Model(manufacturerId, name, phone, email, city, postalCode, country);
-                models.add(model);
+                System.out.printf("%d\t\t%.2f\t\t%.2f\t\t%.2f\t\t%.2f\t\t%.2f\n",
+                    seriesId, voltage, current, resistance, solarFlux, efficiency);
             }
 
-            // Close the result set
             resultSet.close();
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return models;
     }
-*/
+
+    private String getSeriesIdColumnName(String tableName) {
+        if (tableName.equals("Thermo")) {
+            return "thermo_series_id";
+        } else if (tableName.equals("Photovoltaic")) {
+            return "pv_series_id";
+        } else {
+            throw new IllegalArgumentException("Invalid table name: " + tableName);
+        }
+    }
+    public int getMaxSeriesId(String tableName) {
+        String seriesIdColumnName = getSeriesIdColumnName(tableName);
+        String query = "SELECT MAX(" + seriesIdColumnName + ") " + tableName;
+
+        try (
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet rs = statement.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int getMinSeriesId(String tableName) {
+        String seriesIdColumnName = getSeriesIdColumnName(tableName);
+        String query = "SELECT MIN(" + seriesIdColumnName + ") " + tableName;
+        try (
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet rs = statement.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
     public void closeConnection() {
         try {
             if (connection != null) {
