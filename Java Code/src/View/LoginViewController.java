@@ -1,8 +1,6 @@
 package View;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 
 public class LoginViewController {
@@ -16,7 +14,7 @@ public class LoginViewController {
     private Label PasswordLabel;
 
     @FXML
-    private TextField PasswordTextField;
+    private PasswordField PasswordTextField;
 
     @FXML
     private TextField TextFieldUserID;
@@ -27,6 +25,9 @@ public class LoginViewController {
 
     private DatabaseConnector databaseConnector;
 
+    public Region getRoot() {
+        return root;
+    }
 
 
     public void init (ViewHandler viewHandler, Region root, DatabaseConnector databaseConnector){
@@ -35,7 +36,37 @@ public class LoginViewController {
         this.databaseConnector = databaseConnector;
     }
 
-    public Region getRoot() {
-        return root;
+
+
+
+    @FXML
+    private void loginButtonPressed() {
+        String username = TextFieldUserID.getText();
+        String password = PasswordTextField.getText();
+
+        boolean authenticated = databaseConnector.authenticateUser(username, password);
+
+        if (authenticated) {
+            // Proceed to the next screen
+            viewHandler.openView("Home Page");
+        } else {
+            // Show an error message
+            showAlert("Invalid credentials", "The entered username or password is incorrect.");
+        }
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
+
+
+
+
+
+
+

@@ -1,4 +1,6 @@
 package View;
+import Model.Manufacturer;
+import Model.Model;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -10,6 +12,8 @@ public class ModelEditViewController {
     @FXML
     private Button BackButton;
 
+    @FXML
+    private Button AddButton;
     @FXML
     private Label DimensionsLabel;
 
@@ -43,6 +47,12 @@ public class ModelEditViewController {
     @FXML
     private TextField TextFieldModel;
 
+    @FXML
+    private TextField SolarCelAreaTextField;
+
+    @FXML
+    private Label SolarCellAreaLabel;
+
     private Region root;
     private ViewHandler viewHandler;
 
@@ -59,6 +69,33 @@ public class ModelEditViewController {
     public Region getRoot() {
         return root;
     }
+
+    @FXML
+    public void AddButtonPressed() {
+        String name = TextFieldModel.getText();
+        String manufacturer_name = ManufacturerTextField.getText();
+        String dimensions = DimensionsTextField.getText();
+        String panel_type = PanelTypeTextField.getText();
+        String price = PriceTextField.getText();
+        String solar_cell_area = SolarCelAreaTextField.getText();
+
+
+        Model model = new Model();
+        model.setName(name);
+        model.setManufacturer_name(manufacturer_name);
+        model.setDimensions(dimensions);
+        model.setPanel_type(panel_type);
+        model.setPrice(Integer.parseInt(price));
+        model.setSolar_cell_area(solar_cell_area);
+
+
+        // Insert the manufacturer into the database
+        databaseConnector.insertModel(model);
+
+
+        //    viewHandler.openView("ManufacturerDisplayView");
+    }
+
 
     @FXML public void BackPressed(){
         viewHandler.openView("Home Page");

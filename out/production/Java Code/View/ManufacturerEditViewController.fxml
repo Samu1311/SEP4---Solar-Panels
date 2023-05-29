@@ -46,6 +46,7 @@
             <Font size="22.0" />
          </font>
       </Label>
-      <Button fx:id="saveButtton" layoutX="256.0" layoutY="320.0" mnemonicParsing="false" onAction="#saveButtonPressed" prefHeight="32.0" prefWidth="88.0" text="Save" />
+      <Button fx:id="AddButtton" layoutX="180.0" layoutY="320.0" mnemonicParsing="false" onAction="#saveButtonPressed" prefHeight="32.0" prefWidth="88.0" text="Add" />
+      <Button fx:id="UpdateButton" layoutX="315.0" layoutY="320.0" mnemonicParsing="false" onAction="#updatePressed" prefHeight="32.0" prefWidth="88.0" text="Update" />
    </children>
 </AnchorPane>

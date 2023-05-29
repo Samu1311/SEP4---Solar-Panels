@@ -82,7 +82,7 @@ public class ManufacturerDisplayViewController {
     }
     @FXML public void EditPressed() {
         // Get the selected Manufacturer from the table view
-        /*Manufacturer selectedManufacturer = manufacturerTable.getSelectionModel().getSelectedItem();
+        Manufacturer selectedManufacturer = manufacturerTable.getSelectionModel().getSelectedItem();
 
         // Check if a Manufacturer is selected
         if (selectedManufacturer != null) {
@@ -91,46 +91,48 @@ public class ManufacturerDisplayViewController {
             DatabaseConnector databaseConnector = new DatabaseConnector();
             databaseConnector.setTransactionItemId(manufacturerId);
 
-            viewHandler.openView("Manufacturer Edit");*/
-        if(manufacturerTable != null){
-            manufacturerTable.setEditable(true);
+            viewHandler.openView("Manufacturer Edit");
+            if (manufacturerTable != null) {
+                manufacturerTable.setEditable(true);
+            }
+
+        }
+    }
+
+        public void initialize () {
+            // Call the method to populate the manufacturer table during initialization
+            populateManufacturerTable();
         }
 
+        public void populateManufacturerTable () {
+            // Retrieve all manufacturers from the database
+            manufacturers = databaseConnector.getAllManufacturers();
+            System.out.println(manufacturers.get(0).getManufacturer_id());
+
+            // Set cell value factories for each column to specify how the data should be displayed
+            NameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+            PhoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
+            EmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+            CityColumn.setCellValueFactory(new PropertyValueFactory<>("city_name"));
+            CountryColumn.setCellValueFactory(new PropertyValueFactory<>("country_name"));
+            PostCodeColumn.setCellValueFactory(new PropertyValueFactory<>("postal_code"));
+
+            // Populate the manufacturer table with the retrieved data
+            manufacturerTable.getItems().setAll(manufacturers);
+        }
+        @FXML
+        private void deletePressed () {
+            // Get the selected manufacturer from the table view
+            Manufacturer selectedManufacturer = manufacturerTable.getSelectionModel().getSelectedItem();
+
+            if (selectedManufacturer != null) {
+                // Delete the selected manufacturer from the database and remove it from the table view
+                databaseConnector.deleteManufacturer(selectedManufacturer);
+
+                // Refresh the manufacturer table view
+                populateManufacturerTable();
+            }
+        }
+
+
     }
-
-    public void initialize() {
-        // Call the method to populate the manufacturer table during initialization
-        populateManufacturerTable();
-}
-
-    public void populateManufacturerTable() {
-        // Retrieve all manufacturers from the database
-         manufacturers = databaseConnector.getAllManufacturers();
-
-        // Set cell value factories for each column to specify how the data should be displayed
-        manufacturerIDColumn.setCellValueFactory(new PropertyValueFactory<>("manufacturer_id"));
-        NameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        PhoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
-        EmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
-        CityColumn.setCellValueFactory(new PropertyValueFactory<>("city_name"));
-        CountryColumn.setCellValueFactory(new PropertyValueFactory<>("country_name"));
-        PostCodeColumn.setCellValueFactory(new PropertyValueFactory<>("postal_code"));
-
-        // Populate the manufacturer table with the retrieved data
-        manufacturerTable.getItems().setAll(manufacturers);
-}
-    @FXML
-    private void deletePressed() {
-        // Get the selected manufacturer from the table view
-        Manufacturer selectedManufacturer = manufacturerTable.getSelectionModel().getSelectedItem();
-
-        if (selectedManufacturer != null) {
-            // Delete the selected manufacturer from the database and remove it from the table view
-            databaseConnector.deleteManufacturer(selectedManufacturer);
-
-            // Refresh the manufacturer table view
-            populateManufacturerTable();
-}
-    }
-}
-

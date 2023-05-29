@@ -7,19 +7,24 @@ public class Model
   private String manufacturer_name;
   private int price;
   private String dimensions;
-  private int solar_cell_area;
+  private String solar_cell_area;
   private String panel_type;
 
-  public Model(int model_id, String name, String manufacturer_name, int price,
-      String dimensions, int solar_cell_area, String panel_type)
+  public Model(int model_id, String name, String manufacturer_name,
+      String dimensions, String panel_type, int price, String solar_cell_area)
   {
     this.model_id = model_id;
     this.name = name;
     this.manufacturer_name = manufacturer_name;
-    this.price = price;
     this.dimensions = dimensions;
-    this.solar_cell_area = solar_cell_area;
     this.panel_type = panel_type;
+    this.price = price;
+    this.solar_cell_area = solar_cell_area;
+
+  }
+
+  public Model() {
+
   }
 
   public int getModel_id()
@@ -62,12 +67,12 @@ public class Model
     this.dimensions = dimensions;
   }
 
-  public int getSolar_cell_area()
+  public String getSolar_cell_area()
   {
     return solar_cell_area;
   }
 
-  public void setSolar_cell_area(int solar_cell_area)
+  public void setSolar_cell_area(String solar_cell_area)
   {
     this.solar_cell_area = solar_cell_area;
   }

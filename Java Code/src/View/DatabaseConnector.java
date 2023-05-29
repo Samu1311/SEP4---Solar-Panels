@@ -1,6 +1,8 @@
 package View;
 
 import Model.Manufacturer;
+import Model.Model;
+import javafx.scene.control.TableView;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ public class DatabaseConnector {
     private static Connection connection;
 
     private int transactionItemId;
+    static List<Manufacturer> manufacturers = new ArrayList<>();
 
     public DatabaseConnector() {
         String url = "jdbc:postgresql://snuffleupagus.db.elephantsql.com:5432/gnthefri";
@@ -85,7 +88,7 @@ public class DatabaseConnector {
     }
 // Manufacturer Methods
     public static List<Manufacturer> getAllManufacturers() {
-        List<Manufacturer> manufacturers = new ArrayList<>();
+
 
 
         try {
@@ -99,6 +102,7 @@ public class DatabaseConnector {
             // Iterate through the result set and create Manufacturer objects
             while (resultSet.next()) {
                 int manufacturerId = resultSet.getInt("manufacturer_id");
+                System.out.println(manufacturerId);
                 String name = resultSet.getString("name");
                 String phone = resultSet.getString("phone");
                 String email = resultSet.getString("email");
@@ -119,41 +123,6 @@ public class DatabaseConnector {
         return manufacturers;
     }
 
-    public void printPhotovoltaicSeriesTable() {
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(
-                    "SELECT s.series_id, p.voltage, p.current, p.resistance, p.solar_flux, p.efficiency " +
-                            "FROM ejby_company.series s " +
-                            "JOIN ejby_company.pv_measurements p ON s.series_id = p.series_id " +
-                            "JOIN ( " +
-                            "   SELECT series_id, MAX(date || ' ' || time) AS max_datetime " +
-                            "   FROM ejby_company.pv_measurements " +
-                            "   GROUP BY series_id " +
-                            ") m ON p.series_id = m.series_id AND (p.date || ' ' || p.time) = m.max_datetime"
-            );
-
-            System.out.println("Series ID\tVoltage\t\tCurrent\t\tResistance\tSolar Flux\tEfficiency");
-            System.out.println("---------------------------------------------------------------");
-
-            while (resultSet.next()) {
-                int seriesId = resultSet.getInt("series_id");
-                double voltage = resultSet.getDouble("voltage");
-                double current = resultSet.getDouble("current");
-                double resistance = resultSet.getDouble("resistance");
-                double solarFlux = resultSet.getDouble("solar_flux");
-                double efficiency = resultSet.getDouble("efficiency");
-
-                System.out.printf("%d\t\t%.2f\t\t%.2f\t\t%.2f\t\t%.2f\t\t%.2f\n",
-                        seriesId, voltage, current, resistance, solarFlux, efficiency);
-            }
-
-            resultSet.close();
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     public static Manufacturer insertManufacturer(Manufacturer manufacturer) {
         try {
@@ -235,8 +204,10 @@ public class DatabaseConnector {
         try {
             int manufacturerId = manufacturer.getManufacturer_id();
 
+
+
             // Prepare the SQL statement for deleting the manufacturer
-            String deleteQuery = "DELETE FROM ejby_company.manufacturer WHERE manufacturer_id = ?";
+            String deleteQuery =  "DELETE FROM ejby_company.manufacturer WHERE manufacturer_id = ?";
             PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
             deleteStatement.setInt(1, manufacturerId);
 
@@ -246,25 +217,23 @@ public class DatabaseConnector {
             // Check if the deletion was successful
             if (rowsDeleted > 0) {
                 System.out.println("Manufacturer deleted successfully from the database.");
-
                 // Remove the manufacturer from the GUI table
-
             } else {
                 System.out.println("Failed to delete manufacturer from the database.");
             }
 
-            // Close the delete statement and database connection
-            deleteStatement.close();
+            // Close the statements and database connection
 
 
         } catch (SQLException e) {
             e.printStackTrace();
-}
+        }
     }
 
     public static boolean updateManufacturer(Manufacturer manufacturer) {
         try {
-            int manufacturerId = manufacturer.getManufacturer_id();
+            int manufacturer_id = manufacturer.getManufacturer_id();
+            System.out.println(manufacturer_id);
             String name = manufacturer.getName();
             String phone = manufacturer.getPhone();
             String email = manufacturer.getEmail();
@@ -282,7 +251,7 @@ public class DatabaseConnector {
                 updateStatement.setString(2, phone);
                 updateStatement.setString(3, email);
                 updateStatement.setInt(4, cityId);
-                updateStatement.setInt(5, manufacturerId);
+                updateStatement.setInt(5, manufacturer_id);
                 updateStatement.executeUpdate();
                 System.out.println("Manufacturer updated successfully.");
                 updateStatement.close();
@@ -295,41 +264,129 @@ public class DatabaseConnector {
         return true;
     }
     // Model Methods
-/*
-    public static List<Model> getAllModels() {
+
+    public static List<Model> getAllModels() throws SQLException {
         List<Model> models = new ArrayList<>();
 
-        try {
-            // Execute the query to retrieve the manufacturers data
-            String query = "SELECT m.manufacturer_id, m.name, m.phone, m.email, c.city, c.postal_code, cn.country " +
-                    "FROM ejby_company.manufacturer m " +
-                    "JOIN ejby_company.city c ON m.city_id = c.city_id " +
-                    "JOIN ejby_company.country cn ON c.country_id = cn.country_id";
-            ResultSet resultSet = executeQuery(query);
+try {
+            String query = "SELECT m.model_id, m.name, m.price, m.dimensions,  m.solar_cell_area, m.type, ma.name AS manufacturer_name " +
+                    "FROM  ejby_company.model  m " +
+                    "INNER JOIN ejby_company.manufacturer ma ON m.manufacturer_id = ma.manufacturer_id";
 
-            // Iterate through the result set and create Manufacturer objects
-            while (resultSet.next()) {
-                int manufacturerId = resultSet.getInt("model_id");
-                String name = resultSet.getString("manufacturer_name");
-                String phone = resultSet.getString("phone");
-                String email = resultSet.getString("email");
-                String city = resultSet.getString("city");
-                int postalCode = resultSet.getInt("postal_code");
-                String country = resultSet.getString("country");
+            ResultSet rs = executeQuery(query);
 
-                Model model = new Model(manufacturerId, name, phone, email, city, postalCode, country);
+            while (rs.next()) {
+                int model_id = rs.getInt("model_id");
+                String name = rs.getString("name");
+                int price = rs.getInt("price");
+                String dimensions = rs.getString("dimensions");
+                String solarCellArea = rs.getString("solar_cell_area");
+                String manufacturer_name = rs.getString("manufacturer_name");
+                String panel_type = rs.getString("type");
+                Model model = new Model(model_id, name, manufacturer_name,dimensions, panel_type, price,  solarCellArea);
                 models.add(model);
             }
 
-            // Close the result set
-            resultSet.close();
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return models;
     }
-*/
+
+    public static void deleteModel(Model model) {
+        try {
+            int model_id = model.getModel_id();
+
+
+            // Prepare the SQL statement for deleting the manufacturer
+            String deleteQuery = "DELETE FROM ejby_company.model WHERE model_id = ?";
+            PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
+            deleteStatement.setInt(1, model_id);
+
+            // Execute the delete statement
+            int rowsDeleted = deleteStatement.executeUpdate();
+
+            // Check if the deletion was successful
+            if (rowsDeleted > 0) {
+                System.out.println("Model deleted successfully from the database.");
+
+                // Remove the manufacturer from the GUI table
+
+            } else {
+                System.out.println("Failed to delete modelfrom the database.");
+            }
+
+
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    public static Model insertModel(Model model) {
+        try {
+            String name = model.getName();
+            String manufacturer_name = model.getManufacturer_name();
+            int price = model.getPrice();
+            String dimensions = model.getDimensions();
+            String solarCellArea = model.getSolar_cell_area();
+            String panel_type = model.getPanel_type();
+
+            String insertQuery = "INSERT INTO ejby_company.model (name, price, dimensions, solar_cell_area, type) " +
+                    "VALUES (?, ?, ?, ?, ?) RETURNING model_id";
+            PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
+
+            insertStatement.setString(1, name);
+            insertStatement.setInt(2, price);
+            insertStatement.setString(3, dimensions);
+            insertStatement.setString(4, solarCellArea);
+            insertStatement.setString(5, panel_type);
+
+            // Execute the SQL statement
+            ResultSet generatedKeys = insertStatement.executeQuery();
+
+            // Check if the insertion was successful
+            if (generatedKeys.next()) {
+                int model_id = generatedKeys.getInt("model_id");
+                System.out.println("New model row inserted successfully. Model ID: " + model_id);
+                Model newModel = new Model(model_id, name, manufacturer_name, dimensions, panel_type, price, solarCellArea);
+                return newModel;
+            } else {
+                System.out.println("Failed to insert new model.");
+            }
+
+
+            // Close result sets and statements
+            generatedKeys.close();
+            insertStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    public boolean authenticateUser(String username, String password) {
+        String query = "SELECT * FROM ejby_company.login_credentials WHERE username = ? AND password = ?";
+        try ( PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, username);
+            statement.setString(2, password);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return resultSet.next(); // Returns true if a matching user is found
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // Authentication failed
+    }
+
     public void closeConnection() {
         try {
             if (connection != null) {
