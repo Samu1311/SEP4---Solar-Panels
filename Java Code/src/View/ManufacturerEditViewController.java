@@ -98,7 +98,7 @@ public class ManufacturerEditViewController {
         databaseConnector.insertManufacturer(manufacturer);
 
 
-    //    viewHandler.openView("ManufacturerDisplayView");
+        //    viewHandler.openView("ManufacturerDisplayView");
     }
     public void populateEditForm(Manufacturer manufacturer, TextField nameField, TextField phoneField, TextField emailField, TextField cityField) {
         nameField.setText(manufacturer.getName());
@@ -107,7 +107,7 @@ public class ManufacturerEditViewController {
         cityField.setText(manufacturer.getCity_name());
     }
 
-   @FXML private void updatePressed() {
+    @FXML private void updatePressed() {
         // Retrieve the manufacturer_id from the transactionItemId variable
         DatabaseConnector databaseConnector = new DatabaseConnector();
         int manufacturerId = databaseConnector.getTransactionItemId();
@@ -129,7 +129,7 @@ public class ManufacturerEditViewController {
         } else {
             // Show an error message or perform any other desired action
             System.out.println("No sirvio bro");
-}
+        }
     }
 
 
@@ -143,4 +143,3 @@ public class ManufacturerEditViewController {
         viewHandler.openView("Manufacturer Display");
     }
 }
-

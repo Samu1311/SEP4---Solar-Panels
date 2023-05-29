@@ -22,7 +22,7 @@ public class ViewHandler {
     private SolarPanelFilterViewController solarPanelFilterViewController;
     private SolarPanelDisplayViewController solarPanelDisplayViewController;
     private ModelEditViewController modelEditViewController;
-   // private ModelDisplayViewController modelDisplayViewController;
+    private ModelDisplayViewController modelDisplayViewController;
     private ManufacturerEditViewController manufacturerEditViewController;
     private ManufacturerDisplayViewController manufacturerDisplayViewController;
     private HistoricalTableEditViewController historicalTableEditViewController;
@@ -33,11 +33,11 @@ public class ViewHandler {
 
     private Region root;
 
-     public ViewHandler(DatabaseConnector databaseConnector)
-        {
-            this.currentScene = new Scene(new Region());
-            this.databaseConnector = databaseConnector;
-        }
+    public ViewHandler(DatabaseConnector databaseConnector)
+    {
+        this.currentScene = new Scene(new Region());
+        this.databaseConnector = databaseConnector;
+    }
 
 
 
@@ -86,9 +86,9 @@ public class ViewHandler {
             case "Model Edit":
                 root = loadModelEditView("ModelEditViewController.fxml");
                 break;
-      /*      case "Model Display":
+            case "Model Display":
                 root = loadModelDisplayView("ModelDisplayViewController.fxml");
-                break;*/
+                break;
             // Solar Panels
             case "Solar Panel Edit":
                 root = loadSolarPanelEditView("SolarPanelEditViewController.fxml");
@@ -114,18 +114,18 @@ public class ViewHandler {
 
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        openView("Home Page");
+        openView("Login Page");
+        primaryStage.show();
     }
 
-    public void closeView() {
-        primaryStage.close();
-    }
+
 
     private Region loadLoginView(String fxmlFile) {
         if (loginViewController == null) {
             try {
                 FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(getClass().getResource(fxmlFile));
+                root = loader.load();
                 loginViewController = loader.getController();
                 loginViewController.init(this, root, databaseConnector);
             } catch (Exception e) {
@@ -321,7 +321,7 @@ public class ViewHandler {
         }
         return root;
     }
-/*
+
     private Region loadModelDisplayView(String fxmFile) {
         if (modelDisplayViewController == null) {
             try {
@@ -343,7 +343,7 @@ public class ViewHandler {
         }
         return root;
     }
-*/
+
     private Region loadModelEditView(String fxmFile) {
         if (modelEditViewController == null) {
             try {
@@ -474,9 +474,8 @@ public class ViewHandler {
         }
         return root;
     }
+
+    public void closeView() {
+        primaryStage.close();
+    }
 }
-
-
-
-
-
