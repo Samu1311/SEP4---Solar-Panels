@@ -16,6 +16,7 @@ public class DatabaseConnector {
     private int transactionItemId;
     private Map<String, String> tableNames;
     private Manufacturer manufacturerInEdition;
+    private Model modelInEdition;
 
     private DatabaseConnector() {
         String url = "jdbc:postgresql://snuffleupagus.db.elephantsql.com:5432/gnthefri";
@@ -75,6 +76,22 @@ public class DatabaseConnector {
         tableNames = new HashMap<>();
         tableNames.put("Thermo", "ejby_company.thermo_series");
         tableNames.put("Photovoltaic", "ejby_company.pv_series");
+    }
+
+    public boolean authenticateUser(String username, String password) {
+        String query = "SELECT * FROM ejby_company.login_credentials WHERE username = ? AND password = ?";
+        try ( PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, username);
+            statement.setString(2, password);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return resultSet.next(); // Returns true if a matching user is found
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // Authentication failed
     }
 
         private int getCityId(String city, String country) throws SQLException {
@@ -341,8 +358,6 @@ public class DatabaseConnector {
         }
     }
 
-
-
     public Model insertModel(Model model) {
         try {
             String name = model.getName();
@@ -385,23 +400,15 @@ public class DatabaseConnector {
         return null;
     }
 
-
-    public boolean authenticateUser(String username, String password) {
-        String query = "SELECT * FROM ejby_company.login_credentials WHERE username = ? AND password = ?";
-        try ( PreparedStatement statement = connection.prepareStatement(query)) {
-
-            statement.setString(1, username);
-            statement.setString(2, password);
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-                return resultSet.next(); // Returns true if a matching user is found
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false; // Authentication failed
+    public Model getModelInEdition()
+    {
+        return modelInEdition;
     }
 
+    public void setModelInEdition(Model modelInEdition)
+    {
+        this.modelInEdition = modelInEdition;
+    }
 
     //Series Methods
     public void printPhotovoltaicSeriesTable() {

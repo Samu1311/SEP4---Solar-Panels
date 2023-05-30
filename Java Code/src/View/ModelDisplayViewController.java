@@ -72,15 +72,15 @@ public class ModelDisplayViewController {
   }
 
   @FXML
-  /*public void EditPressed() {
+  public void EditPressed() {
     // Get the selected model from the table view
-    Model selectedModel = modelTable.getSelectionModel().getSelectedItem();
+    databaseConnector.setModelInEdition(modelTable.getSelectionModel().getSelectedItem());
 
-    if (selectedModel != null) {
+    if (databaseConnector.getModelInEdition() != null) {
       // Open the Model Edit view and pass the selected model for editing
-      viewHandler.openView("Model Edit", selectedModel);
+      viewHandler.openView("Model Edit");
     }
-  }*/
+  }
 
   public void initialize() {
     try {
