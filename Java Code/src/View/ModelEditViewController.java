@@ -1,5 +1,5 @@
 package View;
-import Model.Manufacturer;
+
 import Model.Model;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -14,6 +14,7 @@ public class ModelEditViewController {
 
     @FXML
     private Button AddButton;
+
     @FXML
     private Label DimensionsLabel;
 
@@ -55,15 +56,12 @@ public class ModelEditViewController {
 
     private Region root;
     private ViewHandler viewHandler;
-
     private DatabaseConnector databaseConnector;
 
-
-
-    public void init (ViewHandler viewHandler, Region root, DatabaseConnector databaseConnector){
+    public void init(ViewHandler viewHandler, Region root, DatabaseConnector databaseConnector) {
         this.viewHandler = viewHandler;
         this.root = root;
-        this.databaseConnector = databaseConnector;
+        this.databaseConnector = DatabaseConnector.getInstance();
     }
 
     public Region getRoot() {
@@ -79,7 +77,6 @@ public class ModelEditViewController {
         String price = PriceTextField.getText();
         String solar_cell_area = SolarCelAreaTextField.getText();
 
-
         Model model = new Model();
         model.setName(name);
         model.setManufacturer_name(manufacturer_name);
@@ -88,22 +85,19 @@ public class ModelEditViewController {
         model.setPrice(Integer.parseInt(price));
         model.setSolar_cell_area(solar_cell_area);
 
-
-        // Insert the manufacturer into the database
+        // Insert the model into the database
         databaseConnector.insertModel(model);
 
-
-        //    viewHandler.openView("ManufacturerDisplayView");
-    }
-
-
-    @FXML public void BackPressed(){
-        viewHandler.openView("Home Page");
-    }
-
-    @FXML  public void DisplayPressed(){
         viewHandler.openView("Model Display");
     }
 
+    @FXML
+    public void BackPressed() {
+        viewHandler.openView("Home Page");
+    }
 
+    @FXML
+    public void DisplayPressed() {
+        viewHandler.openView("Model Display");
+    }
 }

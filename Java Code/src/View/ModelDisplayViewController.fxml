@@ -6,21 +6,22 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.ManufacturerDisplayViewController">
-    <TableView fx:id="manufacturerTable" layoutX="37.0" layoutY="57.0" prefHeight="200.0" prefWidth="502.0">
-        <columns>
-            <TableColumn fx:id="manufacturerIDColumn" prefWidth="104.0" text="Model.Manufacturer ID" />
-            <TableColumn fx:id="NameColumn" prefWidth="52.0" text="Name" />
-            <TableColumn fx:id="PhoneColumn" prefWidth="60.79998779296875" text="Phone" />
-            <TableColumn fx:id="EmailColumn" prefWidth="48.79998779296875" text="Email" />
-            <TableColumn fx:id="CityColumn" prefWidth="58.39996337890625" text="City" />
-            <TableColumn fx:id="CountryColumn" prefWidth="80.800048828125" text="Country" />
-            <TableColumn fx:id="PostCodeColumn" prefWidth="98.39996337890625" text="Post Code" />
-        </columns>
-    </TableView>
-    <Slider fx:id="Slider" layoutX="551.0" layoutY="57.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="14.0" />
-    <Button fx:id="EditButton" layoutX="409.0" layoutY="277.0" mnemonicParsing="false" onAction="#EditPressed" prefHeight="26.0" prefWidth="58.0" text="Edit" />
-    <Button fx:id="DeleteButton" layoutX="478.0" layoutY="277.0" mnemonicParsing="false" onAction="#deletePressed" prefHeight="26.0" prefWidth="58.0" text="Delete" />
-    <Button fx:id="BackButton" layoutX="259.0" layoutY="329.0" mnemonicParsing="false" onAction="#BackPressed" prefHeight="26.0" prefWidth="58.0" text="Back" />
-    <Button fx:id="AddButton" layoutX="337.0" layoutY="277.0" mnemonicParsing="false" onAction="#AddPressed" prefHeight="26.0" prefWidth="58.0" text="Add" />
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.ModelDisplayViewController">
+    <children>
+        <TableView fx:id="modelTable" layoutX="47.0" layoutY="67.0" prefHeight="200.0" prefWidth="502.0">
+            <columns>
+                <TableColumn fx:id="ModelColumn" minWidth="8.800048828125" prefWidth="67.20001220703125" text="Model" />
+                <TableColumn fx:id="ManufacturerColumn" prefWidth="99.199951171875" text="Manufacturer" />
+                <TableColumn fx:id="DimensionsColumn" prefWidth="84.0" text="Dimensions" />
+                <TableColumn fx:id="PriceColumn" prefWidth="70.4000244140625" text="Price" />
+                <TableColumn fx:id="TypeColumn" prefWidth="59.199951171875" text="Type" />
+                <TableColumn fx:id="SolarCellAreaColumn" prefWidth="132.0" text="Solar cell area" />
+            </columns>
+        </TableView>
+        <Slider layoutX="568.0" layoutY="67.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="14.0" />
+        <Button fx:id="EditButton" layoutX="415.0" layoutY="287.0" mnemonicParsing="false" onAction="#EditPressed" prefHeight="26.0" prefWidth="58.0" text="Edit" />
+        <Button fx:id="DeleteButton" layoutX="488.0" layoutY="287.0" mnemonicParsing="false" onAction="#deletePressed" prefHeight="26.0" prefWidth="58.0" text="Delete" />
+        <Button fx:id="BackButton" layoutX="269.0" layoutY="339.0" mnemonicParsing="false" onAction="#BackPressed" prefHeight="26.0" prefWidth="58.0" text="Back" />
+        <Button fx:id="AddButton" layoutX="336.0" layoutY="287.0" mnemonicParsing="false" onAction="#AddPressed" prefHeight="26.0" prefWidth="58.0" text="Add" />
+    </children>
 </AnchorPane>

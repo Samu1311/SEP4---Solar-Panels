@@ -6,47 +6,58 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.ManufacturerEditViewController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.ModelEditViewController">
    <children>
-      <Button fx:id="backButton" layoutX="45.0" layoutY="320.0" mnemonicParsing="false" onAction="#BackPressed" prefHeight="32.0" prefWidth="88.0" text="Back" />
-      <Button fx:id="displayButton" layoutX="446.0" layoutY="320.0" mnemonicParsing="false" onAction="#DisplayPressed" prefHeight="32.0" prefWidth="88.0" text="Display" />
-      <TextField fx:id="NameTextField" layoutX="45.0" layoutY="81.0" />
-      <TextField fx:id="PhoneTextField" layoutX="45.0" layoutY="178.0" />
-      <Label fx:id="NameLabel" layoutX="42.0" layoutY="42.0" text="Name">
+      <Label fx:id="ModelLabel" layoutX="62.0" layoutY="61.0" text="Model.Model">
          <font>
-            <Font size="22.0" />
+            <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="PhoneLabel" layoutX="40.0" layoutY="134.0" text="Phone">
+      <Label fx:id="ManufacturerLabel" layoutX="62.0" layoutY="151.0" text="Model.Manufacturer">
          <font>
-            <Font size="22.0" />
+            <Font size="18.0" />
          </font>
       </Label>
-      <TextField fx:id="EmailTextField" layoutX="45.0" layoutY="272.0" />
-      <Label fx:id="EmailLabel" layoutX="45.0" layoutY="234.0" text="Email">
+      <Label fx:id="DimensionsLabel" layoutX="59.0" layoutY="249.0" text="Dimensions">
          <font>
-            <Font size="22.0" />
+            <Font size="18.0" />
          </font>
       </Label>
-      <TextField fx:id="CountryField" layoutX="384.0" layoutY="81.0" />
-      <TextField fx:id="CityField" layoutX="384.0" layoutY="178.0" />
-      <TextField fx:id="PostCodeTextField" layoutX="384.0" layoutY="272.0" />
-      <Label fx:id="countryLabel" layoutX="384.0" layoutY="42.0" text="Country">
+      <Label fx:id="PanelTypeLabel" layoutX="372.0" layoutY="61.0" text="Panel Type">
          <font>
-            <Font size="22.0" />
+            <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="cityLabel" layoutX="384.0" layoutY="134.0" text="City">
+      <Label fx:id="PriceLabel" layoutX="372.0" layoutY="151.0" text="Price">
          <font>
-            <Font size="22.0" />
+            <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="PostCodeLabel" layoutX="384.0" layoutY="234.0" text="PostCode">
+      <TextField fx:id="TextFieldModel" layoutX="59.0" layoutY="98.0" />
+      <TextField fx:id="ManufacturerTextField" layoutX="62.0" layoutY="187.0" />
+      <TextField fx:id="DimensionsTextField" layoutX="59.0" layoutY="283.0" />
+      <TextField fx:id="PanelTypeTextField" layoutX="372.0" layoutY="98.0" />
+      <TextField fx:id="PriceTextField" layoutX="372.0" layoutY="187.0" />
+      <Button fx:id="BackButton" layoutX="27.0" layoutY="346.0" mnemonicParsing="false" onAction="#BackPressed" text="Back">
          <font>
-            <Font size="22.0" />
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="DisplayButton" layoutX="500.0" layoutY="346.0" mnemonicParsing="false" onAction="#DisplayPressed" text="Display">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="AddButton" layoutX="383.0" layoutY="346.0" mnemonicParsing="false" onAction="#AddButtonPressed" text="Add">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <TextField fx:id="SolarCelAreaTextField" layoutX="372.0" layoutY="283.0" />
+      <Label fx:id="SolarCellAreaLabel" layoutX="372.0" layoutY="249.0" text="Solar Cell Area">
+         <font>
+            <Font size="18.0" />
          </font>
       </Label>
-      <Button fx:id="AddButtton" layoutX="180.0" layoutY="320.0" mnemonicParsing="false" onAction="#saveButtonPressed" prefHeight="32.0" prefWidth="88.0" text="Add" />
-      <Button fx:id="UpdateButton" layoutX="315.0" layoutY="320.0" mnemonicParsing="false" onAction="#updatePressed" prefHeight="32.0" prefWidth="88.0" text="Update" />
    </children>
 </AnchorPane>

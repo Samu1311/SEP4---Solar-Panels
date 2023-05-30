@@ -1,4 +1,5 @@
 package View;
+
 import Model.Manufacturer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -7,6 +8,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 
 import java.sql.SQLException;
@@ -55,57 +57,46 @@ public class ManufacturerDisplayViewController {
 
     private Region root;
     private ViewHandler viewHandler;
-
-
     private DatabaseConnector databaseConnector;
-    List<Manufacturer> manufacturers ;
+    private List<Manufacturer> manufacturers;
 
-
-
-    public void init (ViewHandler viewHandler, Region root, DatabaseConnector databaseConnector){
+    public void init(ViewHandler viewHandler, Region root, DatabaseConnector databaseConnector) {
         this.viewHandler = viewHandler;
         this.root = root;
-        this.databaseConnector = databaseConnector;
-        manufacturerTable.setEditable(true);
-        initialize();
+        this.databaseConnector = DatabaseConnector.getInstance();
+        populateManufacturerTable();
     }
 
     public Region getRoot() {
         return root;
     }
 
-    @FXML public void BackPressed(){
+    @FXML
+    public void BackPressed() {
         viewHandler.openView("Home Page");
     }
-    @FXML public void AddPressed(){
+
+    @FXML
+    public void AddPressed() {
         viewHandler.openView("Manufacturer Edit");
     }
-    @FXML public void EditPressed() {
+
+    @FXML
+    public void EditPressed() {
         // Get the selected Manufacturer from the table view
-        /*Manufacturer selectedManufacturer = manufacturerTable.getSelectionModel().getSelectedItem();
+        Manufacturer selectedManufacturer = manufacturerTable.getSelectionModel().getSelectedItem();
 
         // Check if a Manufacturer is selected
         if (selectedManufacturer != null) {
-            // Store the manufacturer_id in the transactionItemId variable
-            int manufacturerId = selectedManufacturer.getManufacturer_id();
-            DatabaseConnector databaseConnector = new DatabaseConnector();
-            databaseConnector.setTransactionItemId(manufacturerId);
-
-            viewHandler.openView("Manufacturer Edit");*/
-        if(manufacturerTable != null){
-            manufacturerTable.setEditable(true);
+            // Store the manufacturer in the InEdition variable
+            databaseConnector.setManufacturerInEdition(selectedManufacturer);
+            viewHandler.openView("Manufacturer Edit");
         }
-
     }
-
-    public void initialize() {
-        // Call the method to populate the manufacturer table during initialization
-        populateManufacturerTable();
-}
 
     public void populateManufacturerTable() {
         // Retrieve all manufacturers from the database
-         manufacturers = databaseConnector.getAllManufacturers();
+        manufacturers = databaseConnector.getAllManufacturers();
 
         // Set cell value factories for each column to specify how the data should be displayed
         manufacturerIDColumn.setCellValueFactory(new PropertyValueFactory<>("manufacturer_id"));
@@ -118,7 +109,8 @@ public class ManufacturerDisplayViewController {
 
         // Populate the manufacturer table with the retrieved data
         manufacturerTable.getItems().setAll(manufacturers);
-}
+    }
+
     @FXML
     private void deletePressed() {
         // Get the selected manufacturer from the table view
@@ -130,7 +122,6 @@ public class ManufacturerDisplayViewController {
 
             // Refresh the manufacturer table view
             populateManufacturerTable();
-}
+        }
     }
 }
-

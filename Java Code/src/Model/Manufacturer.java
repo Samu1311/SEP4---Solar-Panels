@@ -27,7 +27,7 @@ public class Manufacturer
   }
 
   public Manufacturer(int manufacturer_id, String name, String phone, String email,
-                      String city_name, String country_name)
+      String city_name, String country_name)
   {
     this.manufacturer_id = manufacturer_id;
     this.name = name;
@@ -116,5 +116,3 @@ public class Manufacturer
     this.country_name = country_name;
   }
 }
-
-

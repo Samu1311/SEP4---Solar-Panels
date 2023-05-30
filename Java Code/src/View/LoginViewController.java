@@ -1,12 +1,21 @@
 package View;
+
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
+import javafx.scene.text.Font;
 
 public class LoginViewController {
 
     private Region root;
     private ViewHandler viewHandler;
+    private DatabaseConnector databaseConnector;
+
     @FXML
     private Button LoginButton;
 
@@ -22,22 +31,15 @@ public class LoginViewController {
     @FXML
     private Label UserIDLabel;
 
-
-    private DatabaseConnector databaseConnector;
-
     public Region getRoot() {
         return root;
     }
 
-
-    public void init (ViewHandler viewHandler, Region root, DatabaseConnector databaseConnector){
+    public void init(ViewHandler viewHandler, Region root, DatabaseConnector databaseConnector) {
         this.viewHandler = viewHandler;
         this.root = root;
         this.databaseConnector = databaseConnector;
     }
-
-
-
 
     @FXML
     private void loginButtonPressed() {
@@ -61,5 +63,10 @@ public class LoginViewController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    public void reset() {
+        TextFieldUserID.clear();
+        PasswordTextField.clear();
     }
 }

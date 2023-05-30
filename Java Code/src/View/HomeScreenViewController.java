@@ -1,12 +1,16 @@
 package View;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
+import javafx.scene.text.Font;
 
 public class HomeScreenViewController {
 
     private Region root;
     private ViewHandler viewHandler;
+    private DatabaseConnector databaseConnector;
 
     @FXML
     private Button EnergyReportButton;
@@ -24,35 +28,41 @@ public class HomeScreenViewController {
     private Button PanelSeriesButton;
 
     @FXML
-    private Button SolarPnaelButton;
+    private Button SolarPanelButton;
 
-    private DatabaseConnector databaseConnector;
-
-
-
-    public void init (ViewHandler viewHandler, Region root, DatabaseConnector databaseConnector){
+    public void init(ViewHandler viewHandler, Region root, DatabaseConnector databaseConnector) {
         this.viewHandler = viewHandler;
         this.root = root;
         this.databaseConnector = databaseConnector;
     }
 
-    @FXML public void EnergyReportPressed(){
+    @FXML
+    public void EnergyReportPressed() {
         viewHandler.openView("Energy Report Edit");
     }
 
-    @FXML public void PanelSeriesPressed(){
+    @FXML
+    public void PanelSeriesPressed() {
         viewHandler.openView("Panel Series Input");
     }
-    @FXML public void SolarPanelPressed(){
+
+    @FXML
+    public void SolarPanelPressed() {
         viewHandler.openView("Solar Panel Filter");
     }
-    @FXML public void ManufacturersPressed(){
+
+    @FXML
+    public void ManufacturersPressed() {
         viewHandler.openView("Manufacturer Display");
     }
-    @FXML public void ModelsPressed(){
+
+    @FXML
+    public void ModelsPressed() {
         viewHandler.openView("Model Display");
     }
-    @FXML public void HistoricalDataPressed(){
+
+    @FXML
+    public void HistoricalDataPressed() {
         viewHandler.openView("Historical Table Edit");
     }
 
@@ -60,4 +70,3 @@ public class HomeScreenViewController {
         return root;
     }
 }
-

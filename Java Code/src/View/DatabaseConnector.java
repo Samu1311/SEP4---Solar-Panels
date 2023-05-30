@@ -9,21 +9,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.sql.DriverManager.getConnection;
-
 public class DatabaseConnector {
-    private static Connection connection;
-    private static List<Manufacturer> manufacturers;
+    private static DatabaseConnector instance;
+    private Connection connection;
+    private List<Manufacturer> manufacturers = new ArrayList<>();
     private int transactionItemId;
     private Map<String, String> tableNames;
+    private Manufacturer manufacturerInEdition;
 
-    public DatabaseConnector() {
+    private DatabaseConnector() {
         String url = "jdbc:postgresql://snuffleupagus.db.elephantsql.com:5432/gnthefri";
         String user = "gnthefri";
         String password = "qUk7llvLAcedh5ggsCeKZ8xJyqGC4sYn";
 
         try {
-            connection = getConnection(url, user, password);
+            connection = DriverManager.getConnection(url, user, password);
             initializeTableNames();
         } catch (SQLException e) {
             System.out.println("Connection failed. Error message: " + e.getMessage());
@@ -31,10 +31,11 @@ public class DatabaseConnector {
         }
     }
 
-    private void initializeTableNames() {
-        tableNames = new HashMap<>();
-        tableNames.put("Thermo", "ejby_company.thermo_series");
-        tableNames.put("Photovoltaic", "ejby_company.pv_series");
+    public static synchronized DatabaseConnector getInstance() {
+        if (instance == null) {
+            instance = new DatabaseConnector();
+        }
+        return instance;
     }
 
     public void testConnection() {
@@ -45,7 +46,7 @@ public class DatabaseConnector {
         }
     }
 
-    public static ResultSet executeQuery(String sql) {
+    public ResultSet executeQuery(String sql) {
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
@@ -69,36 +70,33 @@ public class DatabaseConnector {
         }
     }
 
-    public void setTransactionItemId(int itemId) {
-        this.transactionItemId = itemId;
+    private void initializeTableNames()
+    {
+        tableNames = new HashMap<>();
+        tableNames.put("Thermo", "ejby_company.thermo_series");
+        tableNames.put("Photovoltaic", "ejby_company.pv_series");
     }
 
-    public int getTransactionItemId() {
-        return transactionItemId;
-}
+        private int getCityId(String city, String country) throws SQLException {
+            String query = "SELECT city_id FROM ejby_company.city WHERE city = ? AND country_id = (SELECT country_id FROM ejby_company.country WHERE country = ?)";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, city);
+            statement.setString(2, country);
+            ResultSet resultSet = statement.executeQuery();
 
-    private static int getCityId(String city, String country) throws SQLException {
-        String query = "SELECT city_id FROM ejby_company.city WHERE city = ? AND country_id = (SELECT country_id FROM ejby_company.country WHERE country = ?)";
-        PreparedStatement statement = connection.prepareStatement(query);
-        statement.setString(1, city);
-        statement.setString(2, country);
-        ResultSet resultSet = statement.executeQuery();
+            int cityId = -1;
+            if (resultSet.next()) {
+                cityId = resultSet.getInt("city_id");
+            }
 
-        int cityId = -1;
-        if (resultSet.next()) {
-            cityId = resultSet.getInt("city_id");
+            resultSet.close();
+            statement.close();
+
+            return cityId;
         }
 
-        resultSet.close();
-        statement.close();
-
-        return cityId;
-    }
 // Manufacturer Methods
-public static List<Manufacturer> getAllManufacturers() {
-
-
-
+    public List<Manufacturer> getAllManufacturers() {
     try {
         // Execute the query to retrieve the manufacturers data
         String query = "SELECT m.manufacturer_id, m.name, m.phone, m.email, c.city, c.postal_code, cn.country " +
@@ -127,12 +125,11 @@ public static List<Manufacturer> getAllManufacturers() {
     } catch (SQLException e) {
         e.printStackTrace();
     }
-
     return manufacturers;
-}
+    }
 
 
-    public static Manufacturer insertManufacturer(Manufacturer manufacturer) {
+    public Manufacturer insertManufacturer(Manufacturer manufacturer) {
         try {
             String name = manufacturer.getName();
             String phone = manufacturer.getPhone();
@@ -208,7 +205,7 @@ public static List<Manufacturer> getAllManufacturers() {
         return null;
     }
 
-    public static void deleteManufacturer(Manufacturer manufacturer) {
+    public void deleteManufacturer(Manufacturer manufacturer) {
         try {
             int manufacturerId = manufacturer.getManufacturer_id();
 
@@ -238,10 +235,9 @@ public static List<Manufacturer> getAllManufacturers() {
         }
     }
 
-    public static boolean updateManufacturer(Manufacturer manufacturer) {
+    public boolean updateManufacturer(Manufacturer manufacturer) {
         try {
             int manufacturer_id = manufacturer.getManufacturer_id();
-            System.out.println(manufacturer_id);
             String name = manufacturer.getName();
             String phone = manufacturer.getPhone();
             String email = manufacturer.getEmail();
@@ -271,9 +267,20 @@ public static List<Manufacturer> getAllManufacturers() {
         }
         return true;
     }
-    // Model Methods
 
-    public static List<Model> getAllModels() throws SQLException {
+    public Manufacturer getManufacturerInEdition()
+    {
+        return manufacturerInEdition;
+    }
+
+    public void setManufacturerInEdition(
+        Manufacturer manufacturerInEdition)
+    {
+        this.manufacturerInEdition = manufacturerInEdition;
+    }
+
+    //Model Methods
+    public List<Model> getAllModels() throws SQLException {
         List<Model> models = new ArrayList<>();
 
         try {
@@ -303,7 +310,7 @@ public static List<Manufacturer> getAllManufacturers() {
         return models;
     }
 
-    public static void deleteModel(Model model) {
+    public void deleteModel(Model model) {
         try {
             int model_id = model.getModel_id();
 
@@ -336,7 +343,7 @@ public static List<Manufacturer> getAllManufacturers() {
 
 
 
-    public static Model insertModel(Model model) {
+    public Model insertModel(Model model) {
         try {
             String name = model.getName();
             String manufacturer_name = model.getManufacturer_name();
@@ -433,7 +440,7 @@ public static List<Manufacturer> getAllManufacturers() {
         }
     }
 
-    private String getSeriesIdColumnName(String tableName) {
+    public String getSeriesIdColumnName(String tableName) {
         if (tableName.equals("Thermo")) {
             return "thermo_series_id";
         } else if (tableName.equals("Photovoltaic")) {

@@ -5,7 +5,7 @@ public class SolarPanel
   private int solar_panel_id;
   private int x_coord;
   private int y_coord;
-  private String roof_loc;
+  private final String roof_loc;
   private String model_name;
   private int series;
 

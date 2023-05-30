@@ -22,7 +22,6 @@ public class ManufacturerEditViewController {
     @FXML
     private Button UpdateButton;
 
-
     @FXML
     private TextField EmailTextField;
 
@@ -57,22 +56,22 @@ public class ManufacturerEditViewController {
     private Button displayButton;
 
     @FXML
-    private Button saveButtton;
+    private Button saveButton;
 
     private Region root;
     private ViewHandler viewHandler;
-
     private DatabaseConnector databaseConnector;
 
-
-
-
-    public void init (ViewHandler viewHandler, Region root, DatabaseConnector databaseConnector){
+    public void init(ViewHandler viewHandler, Region root, DatabaseConnector databaseConnector) {
         this.viewHandler = viewHandler;
         this.root = root;
-        this.databaseConnector = databaseConnector;
-
+        this.databaseConnector = DatabaseConnector.getInstance();
+        if (databaseConnector.getManufacturerInEdition() != null)
+        {
+            populateEditForm();
+        }
     }
+
     public Region getRoot() {
         return root;
     }
@@ -97,20 +96,18 @@ public class ManufacturerEditViewController {
         // Insert the manufacturer into the database
         databaseConnector.insertManufacturer(manufacturer);
 
-
-        //    viewHandler.openView("ManufacturerDisplayView");
-    }
-    public void populateEditForm(Manufacturer manufacturer, TextField nameField, TextField phoneField, TextField emailField, TextField cityField) {
-        nameField.setText(manufacturer.getName());
-        phoneField.setText(manufacturer.getPhone());
-        emailField.setText(manufacturer.getEmail());
-        cityField.setText(manufacturer.getCity_name());
+        // viewHandler.openView("ManufacturerDisplayView");
     }
 
-    @FXML private void updatePressed() {
-        // Retrieve the manufacturer_id from the transactionItemId variable
-        DatabaseConnector databaseConnector = new DatabaseConnector();
-        int manufacturerId = databaseConnector.getTransactionItemId();
+    public void populateEditForm() {
+        NameTextField.setText(databaseConnector.getManufacturerInEdition().getName());
+        PhoneTextField.setText(databaseConnector.getManufacturerInEdition().getPhone());
+        EmailTextField.setText(databaseConnector.getManufacturerInEdition().getEmail());
+        CityField.setText(databaseConnector.getManufacturerInEdition().getCity_name());
+    }
+
+    @FXML
+    private void updatePressed() {
 
         String name = NameTextField.getText();
         String phone = PhoneTextField.getText();
@@ -119,27 +116,22 @@ public class ManufacturerEditViewController {
         String city = CityField.getText();
 
         Manufacturer updatedManufacturer = new Manufacturer(name, phone, email, city, country);
-        DatabaseConnector.updateManufacturer(updatedManufacturer);
-        // Call the updateManufacturer method to update the Manufacturer in the database
-        boolean success = DatabaseConnector.updateManufacturer(updatedManufacturer);
+        boolean success = databaseConnector.updateManufacturer(updatedManufacturer);
 
         if (success) {
-            // Show a success message or perform any other desired action
-            System.out.println("Succesfull update");
+            System.out.println("Successful update");
         } else {
-            // Show an error message or perform any other desired action
-            System.out.println("No sirvio bro");
+            System.out.println("Update failed");
         }
     }
 
-
-
-
-
-    @FXML public void BackPressed(){
+    @FXML
+    public void BackPressed() {
         viewHandler.openView("Home Page");
     }
-    @FXML public void DisplayPressed(){
+
+    @FXML
+    public void DisplayPressed() {
         viewHandler.openView("Manufacturer Display");
     }
 }

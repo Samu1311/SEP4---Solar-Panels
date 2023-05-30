@@ -9,9 +9,8 @@ public class MyApplication extends Application
 {
     public void start(Stage primaryStage)
     {
-        DatabaseConnector databaseConnector = new DatabaseConnector();
 
-        ViewHandler view = new ViewHandler(databaseConnector);
+        ViewHandler view = new ViewHandler( DatabaseConnector.getInstance());
         view.start(primaryStage);
     }
 }
