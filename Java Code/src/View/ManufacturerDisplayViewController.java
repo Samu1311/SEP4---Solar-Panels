@@ -127,7 +127,7 @@ public class ManufacturerDisplayViewController {
     @FXML
     public void refreshPressed() {
         // Clear the manufacturers table
-        manufacturerTable.getItems().clear();
+        manufacturers.clear();
 
         // Repopulate the manufacturers table with the latest information
         populateManufacturerTable();

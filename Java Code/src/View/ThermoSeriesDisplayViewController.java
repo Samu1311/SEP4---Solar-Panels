@@ -49,6 +49,11 @@ public class ThermoSeriesDisplayViewController {
     return root;
   }
 
+  @FXML
+  public void BackPressed() {
+    viewHandler.openView("Home Page");
+  }
+
   public void populateThermoSeriesTable(List<ThermoSeries> measurements) {
     SeriesTable.getItems().addAll(measurements);
   }

@@ -1,9 +1,12 @@
 package View;
+import Model.PhotovoltaicSeries;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Region;
+
+import java.util.List;
 
 public class PVSeriesDisplayViewController
 {
@@ -12,28 +15,28 @@ public class PVSeriesDisplayViewController
     private ViewHandler viewHandler;
 
     @FXML
-    private Button BackButton;
+    private Button backButton;
 
     @FXML
-    private TableColumn<?, ?> CurrentColumn;
+    private TableView<PhotovoltaicSeries> seriesTable;
 
     @FXML
-    private TableColumn<?, ?> EffiencyColumn;
+    private TableColumn<PhotovoltaicSeries, Integer> seriesIdColumn;
 
     @FXML
-    private TableColumn<?, ?> ResistanceColumn;
+    private TableColumn<PhotovoltaicSeries, Double> resistanceColumn;
 
     @FXML
-    private TableColumn<?, ?> SeriesIDColumn;
+    private TableColumn<PhotovoltaicSeries, Double> voltageColumn;
 
     @FXML
-    private TableView<?> SeriesTable;
+    private TableColumn<PhotovoltaicSeries, Double> currentColumn;
 
     @FXML
-    private TableColumn<?, ?> SolarFluxColumn;
+    private TableColumn<PhotovoltaicSeries, Double> solarFluxColumn;
 
     @FXML
-    private TableColumn<?, ?> VoltageColumn;
+    private TableColumn<PhotovoltaicSeries, Double> efficiencyColumn;
 
     private DatabaseConnector databaseConnector;
 
@@ -42,6 +45,7 @@ public class PVSeriesDisplayViewController
         this.viewHandler = viewHandler;
         this.root = root;
         this.databaseConnector = DatabaseConnector.getInstance();
+        populatePvSeriesTable();
     }
 
     public Region getRoot() {
@@ -51,5 +55,18 @@ public class PVSeriesDisplayViewController
     @FXML public void BackPressed(){
         viewHandler.openView("Home Page");
     }
+
+    public void populatePvSeriesTable() {
+        // Clear the table before populating with new data
+        seriesTable.getItems().clear();
+
+        // Get the latest PV measurements in the specified range
+        List<PhotovoltaicSeries> pvMeasurements = databaseConnector.get
+
+        // Populate the PV series table with the retrieved data
+        seriesTable.getItems().setAll(pvMeasurements);
+    }
+
+
 
 }

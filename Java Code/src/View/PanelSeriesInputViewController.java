@@ -88,18 +88,20 @@ public class PanelSeriesInputViewController
     }
 
     @FXML
-    public void DisplayPressed() {
+    public void DisplayPressed()
+    {
         int firstSeries = FromComboBox.getValue();
         int finalSeries = ToComboBox.getValue();
 
         if (TypeChoiceBox.getValue() == "Photovoltaic") {
             databaseConnector.setFirstSeries(firstSeries);
             databaseConnector.setFinalSeries(finalSeries);
-            viewHandler.openView("Pv Series Display");
+            viewHandler.openView("PV Series Display");
         } else if (TypeChoiceBox.getValue() == "Thermo"){
             databaseConnector.setFirstSeries(firstSeries);
             databaseConnector.setFinalSeries(finalSeries);
             viewHandler.openView("Thermo Series Display");
         }
+
     }
 }

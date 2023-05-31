@@ -3,6 +3,8 @@ package View;
 import Model.*;
 
 import java.sql.*;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.*;
 
 public class DatabaseConnector {
@@ -15,7 +17,12 @@ public class DatabaseConnector {
     private int finalSeries;
     private List<PhotovoltaicSeries> photovoltaicSeriesForTable = new ArrayList<>();
     private List<ThermoSeries> thermoSeriesForTable = new ArrayList<>();
+    private List<Manufacturer_log> manufacturer_logs = new ArrayList<>();
+    private List<Double> voltageData = new ArrayList<>();
+    private LocalDate graphFromDate;
+    private LocalDate graphToDate;
 
+//General Methods
     private DatabaseConnector() {
         String url = "jdbc:postgresql://snuffleupagus.db.elephantsql.com:5432/gnthefri";
         String user = "gnthefri";
@@ -68,6 +75,38 @@ public class DatabaseConnector {
         }
     }
 
+    public void closeConnection() {
+        try {
+            if (connection != null) {
+                connection.close();
+                System.out.println("Connection to the database closed successfully.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error while closing the connection. Error message: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private int getCityId(String city, String country) throws SQLException {
+        String query = "SELECT city_id FROM ejby_company.city WHERE city = ? AND country_id = (SELECT country_id FROM ejby_company.country WHERE country = ?)";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, city);
+        statement.setString(2, country);
+        ResultSet resultSet = statement.executeQuery();
+
+        int cityId = -1;
+        if (resultSet.next()) {
+            cityId = resultSet.getInt("city_id");
+        }
+
+        resultSet.close();
+        statement.close();
+
+        return cityId;
+    }
+
+
+    //Login Methods
     public boolean authenticateUser(String username, String password) {
         String query = "SELECT * FROM ejby_company.login_credentials WHERE username = ? AND password = ?";
         try ( PreparedStatement statement = connection.prepareStatement(query)) {
@@ -84,23 +123,6 @@ public class DatabaseConnector {
         return false; // Authentication failed
     }
 
-        private int getCityId(String city, String country) throws SQLException {
-            String query = "SELECT city_id FROM ejby_company.city WHERE city = ? AND country_id = (SELECT country_id FROM ejby_company.country WHERE country = ?)";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, city);
-            statement.setString(2, country);
-            ResultSet resultSet = statement.executeQuery();
-
-            int cityId = -1;
-            if (resultSet.next()) {
-                cityId = resultSet.getInt("city_id");
-            }
-
-            resultSet.close();
-            statement.close();
-
-            return cityId;
-        }
 
 // Manufacturer Methods
     public List<Manufacturer> getAllManufacturers() {
@@ -499,8 +521,6 @@ public class DatabaseConnector {
         return thermoSeriesForTable;
     }
 
-
-
     public int getMaxSeriesId(String seriesType) {
         int maxSeriesId = 0;
 
@@ -582,15 +602,140 @@ public class DatabaseConnector {
         this.finalSeries = finalSeries;
     }
 
-    public void closeConnection() {
+    public List<PhotovoltaicSeries> getPhotovoltaicSeriesForTable()
+    {
+        return photovoltaicSeriesForTable;
+    }
+
+    public void setPhotovoltaicSeriesForTable(
+        List<PhotovoltaicSeries> photovoltaicSeriesForTable)
+    {
+        this.photovoltaicSeriesForTable = photovoltaicSeriesForTable;
+    }
+
+    public List<ThermoSeries> getThermoSeriesForTable()
+    {
+        return thermoSeriesForTable;
+    }
+
+    public void setThermoSeriesForTable(
+        List<ThermoSeries> thermoSeriesForTable)
+    {
+        this.thermoSeriesForTable = thermoSeriesForTable;
+    }
+
+    //Report Methods
+public List<Double> filterVoltageDataFromPhotovoltaic(LocalDate fromDate, LocalDate toDate) {
+    List<Double> voltageData = new ArrayList<>();
+
+    try {
+        // Retrieve voltage data from photovoltaic table grouped by day
+        String pvQuery = "SELECT DATE(timestamp) AS day, SUM(voltage) AS sum_voltage FROM ejby_company.pv_measurements WHERE DATE(timestamp) BETWEEN ? AND ? GROUP BY day";
+        PreparedStatement pvStatement = connection.prepareStatement(pvQuery);
+        pvStatement.setDate(1, Date.valueOf(fromDate));
+        pvStatement.setDate(2, Date.valueOf(toDate));
+
+        ResultSet pvResultSet = pvStatement.executeQuery();
+
+        while (pvResultSet.next()) {
+            double sumVoltage = pvResultSet.getDouble("sum_voltage");
+            voltageData.add(sumVoltage);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        // Handle any potential exceptions
+    }
+
+    return voltageData;
+}
+
+    public List<Double> filterVoltageDataFromThermo(LocalDate fromDate, LocalDate toDate) {
+        List<Double> voltageData = new ArrayList<>();
+
         try {
-            if (connection != null) {
-                connection.close();
-                System.out.println("Connection to the database closed successfully.");
+            // Retrieve voltage data from thermo table grouped by day
+            String thermoQuery = "SELECT DATE(timestamp) AS day, SUM(waterflow) AS sum_voltage FROM ejby_company.thermo_measurements WHERE DATE(timestamp) BETWEEN ? AND ? GROUP BY day";
+            PreparedStatement thermoStatement = connection.prepareStatement(thermoQuery);
+            thermoStatement.setDate(1, Date.valueOf(fromDate));
+            thermoStatement.setDate(2, Date.valueOf(toDate));
+
+            ResultSet thermoResultSet = thermoStatement.executeQuery();
+
+            while (thermoResultSet.next()) {
+                double sumVoltage = thermoResultSet.getDouble("sum_voltage");
+                voltageData.add(sumVoltage);
             }
         } catch (SQLException e) {
-            System.out.println("Error while closing the connection. Error message: " + e.getMessage());
             e.printStackTrace();
-}
-}
+            // Handle any potential exceptions
+        }
+
+        return voltageData;
+    }
+
+    public List<Double> getVoltageData() {
+        return voltageData;
+    }
+
+    public void setVoltageData(List<Double> voltageData) {
+        this.voltageData = voltageData;
+    }
+
+    public LocalDate getGraphFromDate() {
+        return graphFromDate;
+    }
+
+    public void setGraphFromDate(LocalDate graphFromDate) {
+        this.graphFromDate = graphFromDate;
+    }
+
+    public LocalDate getGraphToDate() {
+        return graphToDate;
+    }
+
+    public void setGraphToDate(LocalDate graphToDate) {
+        this.graphToDate = graphToDate;
+    }
+
+//Historical Tables Methods
+    public List<Manufacturer_log> getAllHistoricalManufacturer()  {
+
+        try {
+            String query = "SELECT m.timestamp, m.manufacturer_id, m.name, m.phone, m.email, c.city, m.info, m.action " +
+                "FROM  ejby_company.manufacturer_log m " + "JOIN ejby_company.city c ON m.city_id = c.city_id " ;
+
+            ResultSet resultSet = executeQuery(query);
+            System.out.println(resultSet);
+
+            while (resultSet.next()) {
+                Timestamp timestamp = resultSet.getTimestamp("timestamp");
+                int manufacturer_id = resultSet.getInt("manufacturer_id");
+                String name = resultSet.getString("name");
+                String phone = resultSet.getString("phone");
+                String email = resultSet.getString("email");
+                String city = resultSet.getString("city");
+                String info = resultSet.getString("info");
+                String action = resultSet.getString("action");
+
+                Manufacturer_log manufacturer_log = new Manufacturer_log(timestamp, manufacturer_id, name, phone, email, city,info, action );
+                DatabaseConnector.getInstance().manufacturer_logs.add(manufacturer_log);
+
+            }
+
+            resultSet.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return manufacturer_logs;
+    }
+
+    public List<Manufacturer_log> getManufacturer_logs() {
+        return manufacturer_logs;
+    }
+
+    public void setManufacturer_logs(List<Manufacturer_log> manufacturer_logs) {
+        this.manufacturer_logs = manufacturer_logs;
+    }
+
 }
