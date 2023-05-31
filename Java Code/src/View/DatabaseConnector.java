@@ -630,7 +630,6 @@ public class DatabaseConnector {
 
     //Report Methods
 public List<Double> filterVoltageDataFromPhotovoltaic(LocalDate fromDate, LocalDate toDate) {
-    List<Double> voltageData = new ArrayList<>();
 
     try {
         // Retrieve voltage data from photovoltaic table grouped by day

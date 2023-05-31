@@ -10,14 +10,12 @@ import javafx.scene.layout.Region;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
-
 public class EnergyReportDisplayViewController {
 
     private Region root;
     private ViewHandler viewHandler;
-
     @FXML
-    private BarChart<String, Double> voltageHistogram;
+    BarChart<String, Number> voltageHistogram = new BarChart<>(new CategoryAxis(), new NumberAxis());
 
     @FXML
     private CategoryAxis xAxis;
@@ -36,7 +34,6 @@ public class EnergyReportDisplayViewController {
         this.viewHandler = viewHandler;
         this.root = root;
         this.databaseConnector = DatabaseConnector.getInstance();
-
         displayVoltageHistogram();
     }
 
@@ -45,7 +42,7 @@ public class EnergyReportDisplayViewController {
     }
 
     private void displayVoltageHistogram() {
-        XYChart.Series<String, Double> series = new XYChart.Series<>();
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
 
         for (int i = 0; i < databaseConnector.getVoltageData().size(); i++) {
             LocalDate date = fromDate.plusDays(i);
@@ -58,8 +55,6 @@ public class EnergyReportDisplayViewController {
         // Add series to the histogram
         voltageHistogram.getData().add(series);
     }
-
-
 
     @FXML
     public void BackPressed() {

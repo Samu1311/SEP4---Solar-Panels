@@ -73,9 +73,9 @@ public class EnergyReportEditViewController {
 
         // Retrieve efficiency data from the database
         if (panelType.equals("Photovoltaic")) {
-            databaseConnector.setVoltageData(databaseConnector.filterVoltageDataFromPhotovoltaic( databaseConnector.getGraphFromDate(), databaseConnector.getGraphToDate()));
+            databaseConnector.filterVoltageDataFromPhotovoltaic( databaseConnector.getGraphFromDate(), databaseConnector.getGraphToDate());
         } else {
-            databaseConnector.setVoltageData(databaseConnector.filterVoltageDataFromThermo( databaseConnector.getGraphFromDate(), databaseConnector.getGraphToDate() ));
+            databaseConnector.filterVoltageDataFromThermo( databaseConnector.getGraphFromDate(), databaseConnector.getGraphToDate());
         }
 
 
@@ -84,7 +84,8 @@ public class EnergyReportEditViewController {
 
     @FXML
     private void displayPressed() {
-    viewHandler.openView("Energy Report Display"); generateReport();
+    viewHandler.openView("Energy Report Display");
+    generateReport();
 }
 
     @FXML public void BackPressed(){
