@@ -2,8 +2,9 @@ package View;
 
 import Model.Manufacturer;
 import Model.Model;
-
+import Model.Manufacturer_log;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,10 +14,14 @@ public class DatabaseConnector {
     private static DatabaseConnector instance;
     private Connection connection;
     private List<Manufacturer> manufacturers = new ArrayList<>();
-    private int transactionItemId;
+    private List<Manufacturer_log> manufacturer_logs = new ArrayList<>();
     private Map<String, String> tableNames;
     private Manufacturer manufacturerInEdition;
     private Model modelInEdition;
+
+    private List<Double> voltageData = new ArrayList<>();
+    private LocalDate graphFromDate;
+    private LocalDate graphToDate;
 
     private DatabaseConnector() {
         String url = "jdbc:postgresql://snuffleupagus.db.elephantsql.com:5432/gnthefri";
@@ -125,8 +130,7 @@ public class DatabaseConnector {
         // Iterate through the result set and create Manufacturer objects
         while (resultSet.next()) {
             int manufacturerId = resultSet.getInt("manufacturer_id");
-            System.out.println(manufacturerId);
-            String name = resultSet.getString("name");
+                        String name = resultSet.getString("name");
             String phone = resultSet.getString("phone");
             String email = resultSet.getString("email");
             String city = resultSet.getString("city");
@@ -486,7 +490,172 @@ public class DatabaseConnector {
         }
         return 0;
     }
+/*
+    public List<Double> filterVoltageDataFromPhotovoltaic(LocalDate fromDate, LocalDate toDate) {
+        List<Double> efficiencyData = new ArrayList<>();
 
+        try {
+            // Retrieve efficiency data from photovoltaic table grouped by day
+            String pvQuery = "SELECT DATE(timestamp) AS day, AVG(efficiency) AS average_efficiency FROM ejby_company.pv_measurements WHERE DATE(timestamp) BETWEEN ? AND ? GROUP BY day";
+            PreparedStatement pvStatement = connection.prepareStatement(pvQuery);
+            pvStatement.setDate(1, Date.valueOf(fromDate));
+            pvStatement.setDate(2, Date.valueOf(toDate));
+
+            ResultSet pvResultSet = pvStatement.executeQuery();
+
+            while (pvResultSet.next()) {
+                double efficiency = pvResultSet.getDouble("average_efficiency");
+                efficiencyData.add(efficiency);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle any potential exceptions
+        }
+
+        return efficiencyData;
+    }
+
+    public List<Double> filterVoltageDataFromThermo(LocalDate fromDate, LocalDate toDate) {
+        List<Double> efficiencyData = new ArrayList<>();
+
+        try {
+            // Retrieve efficiency data from thermo table grouped by day
+            String thermoQuery = "SELECT DATE(timestamp) AS day, AVG(efficiency) AS average_efficiency FROM ejby_company.thermo_measurements WHERE DATE(timestamp) BETWEEN ? AND ? GROUP BY day";
+            PreparedStatement thermoStatement = connection.prepareStatement(thermoQuery);
+            thermoStatement.setDate(1, Date.valueOf(fromDate));
+            thermoStatement.setDate(2, Date.valueOf(toDate));
+
+            ResultSet thermoResultSet = thermoStatement.executeQuery();
+
+            while (thermoResultSet.next()) {
+                double efficiency = thermoResultSet.getDouble("average_efficiency");
+                efficiencyData.add(efficiency);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle any potential exceptions
+        }
+
+        return efficiencyData;
+    }
+
+
+ */
+
+    public List<Double> filterVoltageDataFromPhotovoltaic(LocalDate fromDate, LocalDate toDate) {
+        List<Double> voltageData = new ArrayList<>();
+
+        try {
+            // Retrieve voltage data from photovoltaic table grouped by day
+            String pvQuery = "SELECT DATE(timestamp) AS day, SUM(voltage) AS sum_voltage FROM ejby_company.pv_measurements WHERE DATE(timestamp) BETWEEN ? AND ? GROUP BY day";
+            PreparedStatement pvStatement = connection.prepareStatement(pvQuery);
+            pvStatement.setDate(1, Date.valueOf(fromDate));
+            pvStatement.setDate(2, Date.valueOf(toDate));
+
+            ResultSet pvResultSet = pvStatement.executeQuery();
+
+            while (pvResultSet.next()) {
+                double sumVoltage = pvResultSet.getDouble("sum_voltage");
+                voltageData.add(sumVoltage);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle any potential exceptions
+        }
+
+        return voltageData;
+    }
+
+    public List<Double> filterVoltageDataFromThermo(LocalDate fromDate, LocalDate toDate) {
+        List<Double> voltageData = new ArrayList<>();
+
+        try {
+            // Retrieve voltage data from thermo table grouped by day
+            String thermoQuery = "SELECT DATE(timestamp) AS day, SUM(waterflow) AS sum_voltage FROM ejby_company.thermo_measurements WHERE DATE(timestamp) BETWEEN ? AND ? GROUP BY day";
+            PreparedStatement thermoStatement = connection.prepareStatement(thermoQuery);
+            thermoStatement.setDate(1, Date.valueOf(fromDate));
+            thermoStatement.setDate(2, Date.valueOf(toDate));
+
+            ResultSet thermoResultSet = thermoStatement.executeQuery();
+
+            while (thermoResultSet.next()) {
+                double sumVoltage = thermoResultSet.getDouble("sum_voltage");
+                voltageData.add(sumVoltage);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle any potential exceptions
+        }
+
+        return voltageData;
+    }
+
+
+
+    public List<Double> getVoltageData() {
+        return voltageData;
+    }
+
+    public void setVoltageData(List<Double> voltageData) {
+        this.voltageData = voltageData;
+    }
+
+
+    public List<Manufacturer_log> getAllHistoricalManufacturer()  {
+
+        try {
+            String query = "SELECT m.timestamp, m.manufacturer_id, m.name, m.phone, m.email, c.city, m.info, m.action" +
+                    "FROM  ejby_company.manufacturer_log m " + "JOIN ejby_company.city c ON m.city_id = c.city_id " ;
+
+            ResultSet resultSet = executeQuery(query);
+            System.out.println(resultSet);
+
+            while (resultSet.next()) {
+                Timestamp timestamp = resultSet.getTimestamp("timestamp");
+                int manufacturer_id = resultSet.getInt("manufacturer_id");
+                String name = resultSet.getString("name");
+                String phone = resultSet.getString("phone");
+                String email = resultSet.getString("email");
+                String city_name = resultSet.getString("city_name");
+                String info = resultSet.getString("info");
+                String action = resultSet.getString("action");
+
+                Manufacturer_log manufacturer_log = new Manufacturer_log(timestamp, manufacturer_id, name, phone, email, city_name,info, action );
+                DatabaseConnector.getInstance().manufacturer_logs.add(manufacturer_log);
+
+            }
+
+            resultSet.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return manufacturer_logs;
+    }
+
+    public LocalDate getGraphFromDate() {
+        return graphFromDate;
+    }
+
+    public void setGraphFromDate(LocalDate graphFromDate) {
+        this.graphFromDate = graphFromDate;
+    }
+
+    public LocalDate getGraphToDate() {
+        return graphToDate;
+    }
+
+    public void setGraphToDate(LocalDate graphToDate) {
+        this.graphToDate = graphToDate;
+    }
+
+    public List<Manufacturer_log> getManufacturer_logs() {
+        return manufacturer_logs;
+    }
+
+    public void setManufacturer_logs(List<Manufacturer_log> manufacturer_logs) {
+        this.manufacturer_logs = manufacturer_logs;
+    }
 
     public void closeConnection() {
         try {

@@ -25,8 +25,7 @@ public class ViewHandler {
     private ManufacturerEditViewController manufacturerEditViewController;
     private ManufacturerDisplayViewController manufacturerDisplayViewController;
     private HistoricalTableEditViewController historicalTableEditViewController;
-    private HistoricalTableDisplayViewController historicalTableDisplayViewController;
-    private MalfunctioningPanelsViewController malfunctioningPanelsViewController;
+
 
     private Region root;
 
@@ -68,13 +67,7 @@ public class ViewHandler {
             case "Historical Table Edit":
                 root = loadHistoricalTableEditView("HistoricalTableEditViewController.fxml");
                 break;
-            case "Historical Table Display":
-                root = loadHistoricalTableDisplay("HistoricalTableDisplayViewController.fxml");
-                break;
-            // Malfunctioning Panels
-            case "Panel Display":
-                root = loadMalfunctioningView("MalfunctioningPanelsViewController.fxml");
-                break;
+
             // Manufacturers
             case "Manufacturer Edit":
                 root = loadManufacturerEditView("ManufacturerEditViewController.fxml");
@@ -324,33 +317,6 @@ public class ViewHandler {
         return historicalTableEditViewController.getRoot();
     }
 
-    private Region loadHistoricalTableDisplay(String fxmlFile) {
-        if (historicalTableDisplayViewController == null) {
-            try {
-                FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(getClass().getResource(fxmlFile));
-                Region root = loader.load();
-                historicalTableDisplayViewController = loader.getController();
-                historicalTableDisplayViewController.init(this, root, databaseConnector);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return historicalTableDisplayViewController.getRoot();
-    }
 
-    private Region loadMalfunctioningView(String fxmlFile) {
-        if (malfunctioningPanelsViewController == null) {
-            try {
-                FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(getClass().getResource(fxmlFile));
-                Region root = loader.load();
-                malfunctioningPanelsViewController = loader.getController();
-                malfunctioningPanelsViewController.init(this, root, databaseConnector);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return malfunctioningPanelsViewController.getRoot();
-    }
+
 }

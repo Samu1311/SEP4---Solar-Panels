@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.HistoricalTableEditViewController">
-    <Label layoutX="77.0" layoutY="110.0" prefHeight="27.0" prefWidth="59.0" text="From:">
-        <font>
-            <Font size="18.0" />
-        </font>
-    </Label>
-    <Label layoutX="77.0" layoutY="160.0" prefHeight="27.0" prefWidth="59.0" text="To:">
-        <font>
-            <Font size="18.0" />
-        </font>
-    </Label>
-    <DatePicker fx:id="fromdatepicker" layoutX="164.0" layoutY="111.0" />
-    <DatePicker fx:id="toDatePicker" layoutX="164.0" layoutY="161.0" />
-    <MenuButton fx:id="category" layoutX="77.0" layoutY="232.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="123.0" text="Category">
-        <items>
-            <MenuItem fx:id="panelItem" mnemonicParsing="false" text="Panels" />
-            <MenuItem fx:id="modelsItem" mnemonicParsing="false" text="Models" />
-            <MenuItem fx:id="manufacturerItem" mnemonicParsing="false" text="Manufacturers" />
-        </items>
-    </MenuButton>
-   <Button fx:id="backButton" layoutX="37.0" layoutY="324.0" mnemonicParsing="false" onAction="#BackPressed" prefHeight="26.0" prefWidth="80.0" text="Display" />
-   <Button fx:id="displayButton11" layoutX="471.0" layoutY="324.0" mnemonicParsing="false" onAction="#DisplayPressed" prefHeight="26.0" prefWidth="80.0" text="Display" />
+   <Button fx:id="backButton" layoutX="37.0" layoutY="324.0" mnemonicParsing="false" onAction="#BackPressed" prefHeight="26.0" prefWidth="80.0" text="Back" />
+   <Button fx:id="ManufacturerButton" layoutX="362.0" layoutY="322.0" mnemonicParsing="false" onAction="#ManufacturerPressed" text="Manufacturer">
+      <font>
+         <Font size="14.0" />
+      </font>
+   </Button>
+   <Button fx:id="ModelButton" layoutX="478.0" layoutY="321.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="103.0" text="Model">
+      <font>
+         <Font size="14.0" />
+      </font>
+   </Button>
+   <TableView fx:id="Manufacturer_logTable" layoutX="30.0" layoutY="29.0" prefHeight="231.0" prefWidth="538.0">
+     <columns>
+       <TableColumn fx:id="TimestampColumn" prefWidth="75.0" text="Timestamp" />
+       <TableColumn fx:id="NameColumn" prefWidth="75.0" text="Name" />
+         <TableColumn fx:id="PhoneColumn" prefWidth="75.0" text="Phone" />
+         <TableColumn fx:id="EmailColumn" prefWidth="75.0" text="Email" />
+         <TableColumn fx:id="City_nameColumn" prefWidth="75.0" text="City  Name" />
+         <TableColumn fx:id="InfoColumn" prefWidth="75.0" text="Info" />
+         <TableColumn fx:id="ActionColumn" prefWidth="86.39999999999998" text="Action" />
+     </columns>
+   </TableView>
 </AnchorPane>
