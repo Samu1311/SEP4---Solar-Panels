@@ -7,7 +7,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Region;
-import javafx.stage.Stage;
 
 import java.util.List;
 
@@ -16,33 +15,36 @@ public class ThermoSeriesDisplayViewController {
   private Region root;
   private ViewHandler viewHandler;
   private DatabaseConnector databaseConnector;
-  @FXML
-  private TableView<ThermoSeries> SeriesTable;
-  @FXML
-  private TableColumn<ThermoSeries, Integer> SeriesIDColumn;
-  @FXML
-  private TableColumn<ThermoSeries, Integer> CollectionTimeColumn;
-  @FXML
-  private TableColumn<ThermoSeries, Double> HotWaterColumn;
-  @FXML
-  private TableColumn<ThermoSeries, Double> SolarFluxColumn;
-  @FXML
-  private TableColumn<ThermoSeries, Double> WaterFlowColumn;
-  @FXML
-  private TableColumn<ThermoSeries, Double> EfficiencyColumn;
-  @FXML
-  private Button BackButton;
 
-  private Stage stage;
+  @FXML
+  private TableView<ThermoSeries> seriesTable;
 
-  public void setStage(Stage stage) {
-    this.stage = stage;
-  }
+  @FXML
+  private TableColumn<ThermoSeries, Integer> seriesIDColumn;
 
-  public void init (ViewHandler viewHandler, Region root, DatabaseConnector databaseConnector){
+  @FXML
+  private TableColumn<ThermoSeries, Integer> collectionTimeColumn;
+
+  @FXML
+  private TableColumn<ThermoSeries, Double> hotWaterColumn;
+
+  @FXML
+  private TableColumn<ThermoSeries, Double> solarFluxColumn;
+
+  @FXML
+  private TableColumn<ThermoSeries, Double> waterFlowColumn;
+
+  @FXML
+  private TableColumn<ThermoSeries, Double> efficiencyColumn;
+
+  @FXML
+  private Button backButton;
+
+  public void init(ViewHandler viewHandler, Region root, DatabaseConnector databaseConnector) {
     this.viewHandler = viewHandler;
     this.root = root;
     this.databaseConnector = DatabaseConnector.getInstance();
+    populateThermoSeriesTable(DatabaseConnector.getInstance().getFirstSeries(), DatabaseConnector.getInstance().getFinalSeries());;
   }
 
   public Region getRoot() {
@@ -54,8 +56,23 @@ public class ThermoSeriesDisplayViewController {
     viewHandler.openView("Home Page");
   }
 
-  public void populateThermoSeriesTable(List<ThermoSeries> measurements) {
-    SeriesTable.getItems().addAll(measurements);
-  }
-}
+  public void populateThermoSeriesTable(int firstSeries, int lastSeries) {
+    // Clear the table before populating with new data
+    seriesTable.getItems().clear();
 
+    // Get the latest ThermoSeries measurements in the specified range
+    List<ThermoSeries> thermoMeasurements = databaseConnector.getLatestThermoMeasurementsInRange(firstSeries, lastSeries);
+
+    // Set cell value factories for each column to specify how the data should be displayed
+    seriesIDColumn.setCellValueFactory(new PropertyValueFactory<>("series_id"));
+    collectionTimeColumn.setCellValueFactory(new PropertyValueFactory<>("collection_time_period"));
+    hotWaterColumn.setCellValueFactory(new PropertyValueFactory<>("hot_water_temperature"));
+    solarFluxColumn.setCellValueFactory(new PropertyValueFactory<>("solar_flux"));
+    waterFlowColumn.setCellValueFactory(new PropertyValueFactory<>("water_flow"));
+    efficiencyColumn.setCellValueFactory(new PropertyValueFactory<>("efficiency"));
+
+    // Populate the ThermoSeries table with the retrieved data
+    seriesTable.getItems().addAll(thermoMeasurements);
+  }
+
+}

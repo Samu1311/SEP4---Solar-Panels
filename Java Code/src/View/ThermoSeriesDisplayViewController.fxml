@@ -6,22 +6,21 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.ThermoSeriesDisplayViewController">
    <children>
       <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="400.0" prefWidth="600.0">
          <children>
-            <TableView fx:id="SeriesTable" layoutX="42.0" layoutY="74.0" prefHeight="200.0" prefWidth="514.0">
+            <TableView fx:id="seriesTable" layoutX="42.0" layoutY="74.0" prefHeight="200.0" prefWidth="514.0">
                <columns>
-                  <TableColumn fx:id="SeriesIDColumn" prefWidth="85.5999755859375" text="Series ID" />
-                  <TableColumn fx:id="CollectionTimeColumn" prefWidth="89.5999755859375" text="Collec. Time" />
-                  <TableColumn fx:id="HotWaterColumn" prefWidth="88.0" text="Hot water temp." />
-                  <TableColumn fx:id="SolarFluxColumn" prefWidth="83.99993896484375" text="Solar Flux" />
-                  <TableColumn fx:id="WaterFlowColumn" prefWidth="81.5999755859375" text="Water Flow" />
-                  <TableColumn fx:id="EffiencyColumn" prefWidth="89.5999755859375" text="Efficiency" />
+                  <TableColumn fx:id="seriesIDColumn" prefWidth="85.5999755859375" text="Series ID" />
+                  <TableColumn fx:id="collectionTimeColumn" prefWidth="89.5999755859375" text="Collec. Time" />
+                  <TableColumn fx:id="hotWaterColumn" prefWidth="88.0" text="Hot water temp." />
+                  <TableColumn fx:id="solarFluxColumn" prefWidth="83.99993896484375" text="Solar Flux" />
+                  <TableColumn fx:id="waterFlowColumn" prefWidth="81.5999755859375" text="Water Flow" />
+                  <TableColumn fx:id="efficiencyColumn" prefWidth="89.5999755859375" text="Efficiency" />
                </columns>
             </TableView>
-            <Button fx:id="BackButton" layoutX="275.0" layoutY="336.0" mnemonicParsing="false" onAction="#BackPressed" text="Back">
+            <Button fx:id="backButton" layoutX="275.0" layoutY="336.0" mnemonicParsing="false" onAction="#BackPressed" text="Back">
                <font>
                   <Font size="14.0" />
                </font>

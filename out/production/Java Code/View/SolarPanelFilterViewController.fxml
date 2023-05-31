@@ -19,16 +19,6 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="ModelLabel" layoutX="95.0" layoutY="232.0" text="Model.Model">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label fx:id="SeriesLabel" layoutX="434.0" layoutY="232.0" text="Series">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
       <Button fx:id="BackButton" layoutX="14.0" layoutY="347.0" mnemonicParsing="false" onAction="#BackPressed" text="Back">
          <font>
             <Font size="18.0" />
@@ -51,8 +41,6 @@
       </Label>
       <TextField fx:id="TextFieldFrom" layoutX="95.0" layoutY="119.0" prefHeight="26.0" prefWidth="86.0" />
       <TextField fx:id="TextFieldTo" layoutX="95.0" layoutY="154.0" prefHeight="26.0" prefWidth="86.0" />
-      <TextField fx:id="TextFieldModel" layoutX="77.0" layoutY="278.0" prefHeight="26.0" prefWidth="86.0" />
-      <TextField fx:id="TextFieldSeries" layoutX="421.0" layoutY="271.0" prefHeight="26.0" prefWidth="86.0" />
       <ChoiceBox fx:id="ChoiceBox" layoutX="383.0" layoutY="118.0" prefWidth="150.0" />
    </children>
 </AnchorPane>

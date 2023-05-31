@@ -21,6 +21,10 @@ public class DatabaseConnector {
     private List<Double> voltageData = new ArrayList<>();
     private LocalDate graphFromDate;
     private LocalDate graphToDate;
+    private List<SolarPanel> selectedPanels = new ArrayList<>();
+    private String panelType;
+    private int panelFromLocation;
+    private int panelToLocation;
 
 //General Methods
     private DatabaseConnector() {
@@ -447,10 +451,10 @@ public class DatabaseConnector {
 
         try {
             String query = "SELECT p.series_id, p.voltage, p.current, p.resistance, p.solar_flux, p.efficiency " +
-                "FROM pv_measurements p " +
+                "FROM ejby_company.pv_measurements p " +
                 "JOIN (" +
                 "    SELECT series_id, MAX(timestamp) AS latest_timestamp " +
-                "    FROM pv_measurements " +
+                "    FROM ejby_company.pv_measurements " +
                 "    WHERE series_id >= ? AND series_id <= ? " +
                 "    GROUP BY series_id" +
                 ") m ON p.series_id = m.series_id AND p.timestamp = m.latest_timestamp";
@@ -462,14 +466,14 @@ public class DatabaseConnector {
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                int seriesId = resultSet.getInt("series_id");
+                int series_id = resultSet.getInt("series_id");
                 double voltage = resultSet.getDouble("voltage");
                 double current = resultSet.getDouble("current");
                 double resistance = resultSet.getDouble("resistance");
-                double solarFlux = resultSet.getDouble("solar_flux");
+                double solar_flux = resultSet.getDouble("solar_flux");
                 double efficiency = resultSet.getDouble("efficiency");
 
-                PhotovoltaicSeries pvSeries = new PhotovoltaicSeries(seriesId, voltage, current, resistance, solarFlux, efficiency);
+                PhotovoltaicSeries pvSeries = new PhotovoltaicSeries(series_id, voltage, current, resistance, solar_flux, efficiency);
                 photovoltaicSeriesForTable.add(pvSeries);
             }
 
@@ -486,10 +490,10 @@ public class DatabaseConnector {
 
         try {
             String query = "SELECT t.series_id, t.collection_time_period, t.hot_water_temperature, t.solar_flux, t.water_flow, t.efficiency " +
-                "FROM thermo_measurements t " +
+                "FROM ejby_company.thermo_measurements t " +
                 "JOIN (" +
                 "    SELECT series_id, MAX(timestamp) AS latest_timestamp " +
-                "    FROM thermo_measurements " +
+                "    FROM ejby_company.thermo_measurements " +
                 "    WHERE series_id >= ? AND series_id <= ? " +
                 "    GROUP BY series_id" +
                 ") m ON t.series_id = m.series_id AND t.timestamp = m.latest_timestamp";
@@ -696,8 +700,64 @@ public List<Double> filterVoltageDataFromPhotovoltaic(LocalDate fromDate, LocalD
     public void setGraphToDate(LocalDate graphToDate) {
         this.graphToDate = graphToDate;
     }
+//Panels Methods
+public List<SolarPanel> getSelectedPanels(int from, int to, String type) {
 
-//Historical Tables Methods
+    String tableName = type.equals("Thermo") ? "ejby_company.thermo_panel" : "ejby_company.photovoltaic_panel";
+
+    String query = "SELECT * FROM " + tableName + " WHERE roof_loc_id BETWEEN ? AND ?";
+    try {
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, from);
+        statement.setInt(2, to);
+
+        ResultSet resultSet = statement.executeQuery();
+        while (resultSet.next()) {
+            int solarPanelId = resultSet.getInt("solar_panel_id");
+            int roofLoc = resultSet.getInt("roof_loc_id");
+            int series = resultSet.getInt("series_id");
+
+            SolarPanel solarPanel = new SolarPanel(solarPanelId, roofLoc, series);
+            selectedPanels.add(solarPanel);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return selectedPanels;
+}
+
+    public String getPanelType()
+    {
+        return panelType;
+    }
+
+    public void setPanelType(String panelType)
+    {
+        this.panelType = panelType;
+    }
+
+    public int getPanelFromLocation()
+    {
+        return panelFromLocation;
+    }
+
+    public void setPanelFromLocation(int panelFromLocation)
+    {
+        this.panelFromLocation = panelFromLocation;
+    }
+
+    public int getPanelToLocation()
+    {
+        return panelToLocation;
+    }
+
+    public void setPanelToLocation(int panelToLocation)
+    {
+        this.panelToLocation = panelToLocation;
+    }
+
+    //Historical Tables Methods
     public List<Manufacturer_log> getAllHistoricalManufacturer()  {
 
         try {
