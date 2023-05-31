@@ -16,7 +16,7 @@ public class ViewHandler {
     private EnergyReportEditViewController energyReportEditViewController;
     private EnergyReportDisplayViewController energyReportDisplayViewController;
     private PanelSeriesInputViewController panelSeriesInputViewController;
-    private PanelSeriesDisplayViewController panelSeriesDisplayViewController;
+    private PVSeriesDisplayViewController PVSeriesDisplayViewController;
     private SolarPanelEditViewController solarPanelEditViewController;
     private SolarPanelFilterViewController solarPanelFilterViewController;
     private SolarPanelDisplayViewController solarPanelDisplayViewController;
@@ -27,6 +27,8 @@ public class ViewHandler {
     private HistoricalTableEditViewController historicalTableEditViewController;
     private HistoricalTableDisplayViewController historicalTableDisplayViewController;
     private MalfunctioningPanelsViewController malfunctioningPanelsViewController;
+
+    private ThermoSeriesDisplayViewController thermoSeriesDisplayViewController;
 
     private Region root;
 
@@ -51,8 +53,11 @@ public class ViewHandler {
                 root = loadHomePageView("HomeScreenViewController.fxml");
                 break;
             // Series
-            case "Panel Series Display":
-                root = loadPanelSeriesDisplayView("PanelSeriesDisplayViewController.fxml");
+            case "PV Series Display":
+                root = loadPVSeriesDisplayView("PVSeriesDisplayViewController.fxml");
+                break;
+            case "Thermo Series Display":
+                root = loadThermoSeriesDisplayView("ThermoSeriesDisplayViewController.fxml");
                 break;
             case "Panel Series Input":
                 root = loadPanelSeriesInputView("PanelSeriesInputViewController.fxml");
@@ -189,19 +194,34 @@ public class ViewHandler {
         return panelSeriesInputViewController.getRoot();
     }
 
-    private Region loadPanelSeriesDisplayView(String fxmlFile) {
-        if (panelSeriesDisplayViewController == null) {
+    private Region loadPVSeriesDisplayView(String fxmlFile) {
+        if (PVSeriesDisplayViewController == null) {
             try {
                 FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(getClass().getResource(fxmlFile));
                 Region root = loader.load();
-                panelSeriesDisplayViewController = loader.getController();
-                panelSeriesDisplayViewController.init(this, root, databaseConnector);
+                PVSeriesDisplayViewController = loader.getController();
+                PVSeriesDisplayViewController.init(this, root, databaseConnector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return panelSeriesDisplayViewController.getRoot();
+        return PVSeriesDisplayViewController.getRoot();
+    }
+
+    private Region loadThermoSeriesDisplayView(String fxmlFile) {
+        if (thermoSeriesDisplayViewController == null) {
+            try {
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource(fxmlFile));
+                Region root = loader.load();
+                thermoSeriesDisplayViewController = loader.getController();
+                thermoSeriesDisplayViewController.init(this, root, databaseConnector);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return PVSeriesDisplayViewController.getRoot();
     }
 
     private Region loadSolarPanelEditView(String fxmlFile) {

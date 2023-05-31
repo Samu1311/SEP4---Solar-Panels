@@ -23,4 +23,5 @@
     <Button fx:id="DeleteButton" layoutX="478.0" layoutY="277.0" mnemonicParsing="false" onAction="#deletePressed" prefHeight="26.0" prefWidth="58.0" text="Delete" />
     <Button fx:id="BackButton" layoutX="259.0" layoutY="329.0" mnemonicParsing="false" onAction="#BackPressed" prefHeight="26.0" prefWidth="58.0" text="Back" />
     <Button fx:id="AddButton" layoutX="337.0" layoutY="277.0" mnemonicParsing="false" onAction="#AddPressed" prefHeight="26.0" prefWidth="58.0" text="Add" />
+   <Button fx:id="RefreshButton" layoutX="37.0" layoutY="278.0" mnemonicParsing="false" text="Refresh" />
 </AnchorPane>

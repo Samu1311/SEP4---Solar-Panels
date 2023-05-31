@@ -30,6 +30,16 @@ public class ThermoSeries
     this.efficiency = efficiency;
   }
 
+  public ThermoSeries(int seriesId, int collectionTimePeriod, double hotWaterTemperature, double solarFlux, double waterFlow, double efficiency)
+  {
+    this.series_id = seriesId;
+    this.collection_time_period = collectionTimePeriod;
+    this.hot_water_temperature = hotWaterTemperature;
+    this.solar_flux = solarFlux;
+    this.water_flow = waterFlow;
+    this.efficiency = efficiency;
+  }
+
   public int getSeries_id()
   {
     return series_id;

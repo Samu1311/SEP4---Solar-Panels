@@ -5,20 +5,17 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Region;
 
-public class PanelSeriesDisplayViewController {
+public class PVSeriesDisplayViewController
+{
 
     private Region root;
     private ViewHandler viewHandler;
-
 
     @FXML
     private Button BackButton;
 
     @FXML
     private TableColumn<?, ?> CurrentColumn;
-
-    @FXML
-    private Button DeleteButton;
 
     @FXML
     private TableColumn<?, ?> EffiencyColumn;
@@ -38,15 +35,13 @@ public class PanelSeriesDisplayViewController {
     @FXML
     private TableColumn<?, ?> VoltageColumn;
 
-
     private DatabaseConnector databaseConnector;
-
 
 
     public void init (ViewHandler viewHandler, Region root, DatabaseConnector databaseConnector){
         this.viewHandler = viewHandler;
         this.root = root;
-        this.databaseConnector = databaseConnector;
+        this.databaseConnector = DatabaseConnector.getInstance();
     }
 
     public Region getRoot() {

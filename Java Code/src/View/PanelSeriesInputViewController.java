@@ -7,43 +7,36 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
 
-public class PanelSeriesInputViewController {
+public class PanelSeriesInputViewController
+{
 
     private Region root;
     private ViewHandler viewHandler;
-    @FXML
-    private Button BackButton;
+    @FXML private Button BackButton;
 
-    @FXML
-    private Button DisplayButton;
+    @FXML private Button DisplayButton;
 
-    @FXML
-    private ComboBox<Integer> FromComboBox;
+    @FXML private ComboBox<Integer> FromComboBox;
 
-    @FXML
-    private Label FromLabel;
+    @FXML private Label FromLabel;
 
-    @FXML
-    private Label LocationLabel;
+    @FXML private Label LocationLabel;
 
-    @FXML
-    private Label PanelTypeLabel;
+    @FXML private Label PanelTypeLabel;
 
-    @FXML
-    private ComboBox<Integer> ToComboBox;
+    @FXML private ComboBox<Integer> ToComboBox;
 
-    @FXML
-    private Label ToLabel;
+    @FXML private Label ToLabel;
 
-    @FXML
-    private ChoiceBox<String> TypeChoiceBox;
+    @FXML private ChoiceBox<String> TypeChoiceBox;
 
     private DatabaseConnector databaseConnector;
 
-    public void init(ViewHandler viewHandler, Region root, DatabaseConnector databaseConnector) {
+    public void init(ViewHandler viewHandler, Region root, DatabaseConnector databaseConnector)
+    {
         this.viewHandler = viewHandler;
         this.root = root;
-        this.databaseConnector = databaseConnector;
+        this.databaseConnector = DatabaseConnector.getInstance();
 
         // Set the options for the TypeChoiceBox
         TypeChoiceBox.getItems().addAll("Thermo", "Photovoltaic");
@@ -55,7 +48,8 @@ public class PanelSeriesInputViewController {
         });
     }
 
-    private void updateRange(String seriesType) {
+    private void updateRange(String seriesType)
+    {
         // Clear the existing options
         FromComboBox.getItems().clear();
         ToComboBox.getItems().clear();
@@ -65,31 +59,46 @@ public class PanelSeriesInputViewController {
         int maxSeriesId = databaseConnector.getMaxSeriesId(seriesType);
 
         // Set the range options in the FromComboBox and ToComboBox
-        for (int i = minSeriesId; i <= maxSeriesId; i++) {
+        for (int i = minSeriesId; i <= maxSeriesId; i++)
+        {
             FromComboBox.getItems().add(i);
             ToComboBox.getItems().add(i);
         }
 
         // Select the first option as the default
-        if (!FromComboBox.getItems().isEmpty()) {
+        if (!FromComboBox.getItems().isEmpty())
+        {
             FromComboBox.getSelectionModel().selectFirst();
         }
-        if (!ToComboBox.getItems().isEmpty()) {
+        if (!ToComboBox.getItems().isEmpty())
+        {
             ToComboBox.getSelectionModel().selectFirst();
         }
     }
 
-    public Region getRoot() {
+    public Region getRoot()
+    {
         return root;
     }
 
-    @FXML
-    public void BackPressed() {
+    @FXML public void BackPressed()
+    {
         viewHandler.openView("Home Page");
     }
 
     @FXML
     public void DisplayPressed() {
-        viewHandler.openView("Panel Series Display");
+        int firstSeries = FromComboBox.getValue();
+        int finalSeries = ToComboBox.getValue();
+
+        if (TypeChoiceBox.getValue() == "Photovoltaic") {
+            databaseConnector.setFirstSeries(firstSeries);
+            databaseConnector.setFinalSeries(finalSeries);
+            viewHandler.openView("Pv Series Display");
+        } else if (TypeChoiceBox.getValue() == "Thermo"){
+            databaseConnector.setFirstSeries(firstSeries);
+            databaseConnector.setFinalSeries(finalSeries);
+            viewHandler.openView("Thermo Series Display");
+        }
     }
 }

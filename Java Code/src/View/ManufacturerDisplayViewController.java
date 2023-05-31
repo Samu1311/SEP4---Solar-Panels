@@ -47,6 +47,9 @@ public class ManufacturerDisplayViewController {
     private TableColumn< Manufacturer, Integer> PostCodeColumn;
 
     @FXML
+    private Button RefreshButton;
+
+    @FXML
     private Slider Slider;
 
     @FXML
@@ -71,6 +74,22 @@ public class ManufacturerDisplayViewController {
         return root;
     }
 
+    public void populateManufacturerTable() {
+        // Retrieve all manufacturers from the database
+        manufacturers = databaseConnector.getAllManufacturers();
+
+        // Set cell value factories for each column to specify how the data should be displayed
+        manufacturerIDColumn.setCellValueFactory(new PropertyValueFactory<>("manufacturer_id"));
+        NameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        PhoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        EmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+        CityColumn.setCellValueFactory(new PropertyValueFactory<>("city_name"));
+        CountryColumn.setCellValueFactory(new PropertyValueFactory<>("country_name"));
+        PostCodeColumn.setCellValueFactory(new PropertyValueFactory<>("postal_code"));
+
+        // Populate the manufacturer table with the retrieved data
+        manufacturerTable.getItems().setAll(manufacturers);
+    }
     @FXML
     public void BackPressed() {
         viewHandler.openView("Home Page");
@@ -94,23 +113,6 @@ public class ManufacturerDisplayViewController {
         }
     }
 
-    public void populateManufacturerTable() {
-        // Retrieve all manufacturers from the database
-        manufacturers = databaseConnector.getAllManufacturers();
-
-        // Set cell value factories for each column to specify how the data should be displayed
-        manufacturerIDColumn.setCellValueFactory(new PropertyValueFactory<>("manufacturer_id"));
-        NameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        PhoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
-        EmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
-        CityColumn.setCellValueFactory(new PropertyValueFactory<>("city_name"));
-        CountryColumn.setCellValueFactory(new PropertyValueFactory<>("country_name"));
-        PostCodeColumn.setCellValueFactory(new PropertyValueFactory<>("postal_code"));
-
-        // Populate the manufacturer table with the retrieved data
-        manufacturerTable.getItems().setAll(manufacturers);
-    }
-
     @FXML
     private void deletePressed() {
         // Get the selected manufacturer from the table view
@@ -119,9 +121,16 @@ public class ManufacturerDisplayViewController {
         if (selectedManufacturer != null) {
             // Delete the selected manufacturer from the database and remove it from the table view
             databaseConnector.deleteManufacturer(selectedManufacturer);
-
-            // Refresh the manufacturer table view
-            populateManufacturerTable();
         }
     }
+
+    @FXML
+    public void refreshPressed() {
+        // Clear the manufacturers table
+        manufacturerTable.getItems().clear();
+
+        // Repopulate the manufacturers table with the latest information
+        populateManufacturerTable();
+    }
+
 }

@@ -1,22 +1,20 @@
 package View;
 
-import Model.Manufacturer;
-import Model.Model;
+import Model.*;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DatabaseConnector {
     private static DatabaseConnector instance;
     private Connection connection;
     private List<Manufacturer> manufacturers = new ArrayList<>();
-    private int transactionItemId;
-    private Map<String, String> tableNames;
     private Manufacturer manufacturerInEdition;
     private Model modelInEdition;
+    private int firstSeries;
+    private int finalSeries;
+    private List<PhotovoltaicSeries> photovoltaicSeriesForTable = new ArrayList<>();
+    private List<ThermoSeries> thermoSeriesForTable = new ArrayList<>();
 
     private DatabaseConnector() {
         String url = "jdbc:postgresql://snuffleupagus.db.elephantsql.com:5432/gnthefri";
@@ -25,7 +23,6 @@ public class DatabaseConnector {
 
         try {
             connection = DriverManager.getConnection(url, user, password);
-            initializeTableNames();
         } catch (SQLException e) {
             System.out.println("Connection failed. Error message: " + e.getMessage());
             e.printStackTrace();
@@ -69,13 +66,6 @@ public class DatabaseConnector {
             e.printStackTrace();
             return -1;
         }
-    }
-
-    private void initializeTableNames()
-    {
-        tableNames = new HashMap<>();
-        tableNames.put("Thermo", "ejby_company.thermo_series");
-        tableNames.put("Photovoltaic", "ejby_company.pv_series");
     }
 
     public boolean authenticateUser(String username, String password) {
@@ -367,15 +357,35 @@ public class DatabaseConnector {
             String solarCellArea = model.getSolar_cell_area();
             String panel_type = model.getPanel_type();
 
-            String insertQuery = "INSERT INTO ejby_company.model (name, price, dimensions, solar_cell_area, type) " +
-                "VALUES (?, ?, ?, ?, ?) RETURNING model_id";
+            // Retrieve manufacturer_id based on manufacturer_name
+            String selectManufacturerQuery = "SELECT manufacturer_id FROM ejby_company.manufacturer WHERE name = ?";
+            PreparedStatement selectManufacturerStatement = connection.prepareStatement(selectManufacturerQuery);
+            selectManufacturerStatement.setString(1, manufacturer_name);
+            ResultSet manufacturerResult = selectManufacturerStatement.executeQuery();
+
+            // Check if a manufacturer with the given name exists
+            int manufacturer_id;
+            if (manufacturerResult.next()) {
+                manufacturer_id = manufacturerResult.getInt("manufacturer_id");
+            } else {
+                System.out.println("Manufacturer not found: " + manufacturer_name);
+                return null;
+            }
+
+            // Close the result set and statement for the manufacturer query
+            manufacturerResult.close();
+            selectManufacturerStatement.close();
+
+            String insertQuery = "INSERT INTO ejby_company.model (name, manufacturer_id, price, dimensions, solar_cell_area, type) " +
+                "VALUES (?, ?, ?, ?, ?, ?) RETURNING model_id";
             PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
 
             insertStatement.setString(1, name);
-            insertStatement.setInt(2, price);
-            insertStatement.setString(3, dimensions);
-            insertStatement.setString(4, solarCellArea);
-            insertStatement.setString(5, panel_type);
+            insertStatement.setInt(2, manufacturer_id);
+            insertStatement.setInt(3, price);
+            insertStatement.setString(4, dimensions);
+            insertStatement.setString(5, solarCellArea);
+            insertStatement.setString(6, panel_type);
 
             // Execute the SQL statement
             ResultSet generatedKeys = insertStatement.executeQuery();
@@ -390,7 +400,6 @@ public class DatabaseConnector {
                 System.out.println("Failed to insert new model.");
             }
 
-
             // Close result sets and statements
             generatedKeys.close();
             insertStatement.close();
@@ -399,6 +408,7 @@ public class DatabaseConnector {
         }
         return null;
     }
+
 
     public Model getModelInEdition()
     {
@@ -411,22 +421,23 @@ public class DatabaseConnector {
     }
 
     //Series Methods
-    public void printPhotovoltaicSeriesTable() {
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(
-                "SELECT s.series_id, p.voltage, p.current, p.resistance, p.solar_flux, p.efficiency " +
-                    "FROM ejby_company.series s " +
-                    "JOIN ejby_company.pv_measurements p ON s.series_id = p.series_id " +
-                    "JOIN ( " +
-                    "   SELECT series_id, MAX(date || ' ' || time) AS max_datetime " +
-                    "   FROM ejby_company.pv_measurements " +
-                    "   GROUP BY series_id " +
-                    ") m ON p.series_id = m.series_id AND (p.date || ' ' || p.time) = m.max_datetime"
-            );
+    public List<PhotovoltaicSeries> getLatestPVMeasurementsInRange(int firstSeries, int lastSeries) {
 
-            System.out.println("Series ID\tVoltage\t\tCurrent\t\tResistance\tSolar Flux\tEfficiency");
-            System.out.println("---------------------------------------------------------------");
+        try {
+            String query = "SELECT p.series_id, p.voltage, p.current, p.resistance, p.solar_flux, p.efficiency " +
+                "FROM pv_measurements p " +
+                "JOIN (" +
+                "    SELECT series_id, MAX(timestamp) AS latest_timestamp " +
+                "    FROM pv_measurements " +
+                "    WHERE series_id >= ? AND series_id <= ? " +
+                "    GROUP BY series_id" +
+                ") m ON p.series_id = m.series_id AND p.timestamp = m.latest_timestamp";
+
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, firstSeries);
+            statement.setInt(2, lastSeries);
+
+            ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
                 int seriesId = resultSet.getInt("series_id");
@@ -436,8 +447,8 @@ public class DatabaseConnector {
                 double solarFlux = resultSet.getDouble("solar_flux");
                 double efficiency = resultSet.getDouble("efficiency");
 
-                System.out.printf("%d\t\t%.2f\t\t%.2f\t\t%.2f\t\t%.2f\t\t%.2f\n",
-                    seriesId, voltage, current, resistance, solarFlux, efficiency);
+                PhotovoltaicSeries pvSeries = new PhotovoltaicSeries(seriesId, voltage, current, resistance, solarFlux, efficiency);
+                photovoltaicSeriesForTable.add(pvSeries);
             }
 
             resultSet.close();
@@ -445,48 +456,131 @@ public class DatabaseConnector {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return photovoltaicSeriesForTable;
     }
 
-    public String getSeriesIdColumnName(String tableName) {
-        if (tableName.equals("Thermo")) {
-            return "thermo_series_id";
-        } else if (tableName.equals("Photovoltaic")) {
-            return "pv_series_id";
-        } else {
-            throw new IllegalArgumentException("Invalid table name: " + tableName);
-        }
-    }
-    public int getMaxSeriesId(String tableName) {
-        String seriesIdColumnName = getSeriesIdColumnName(tableName);
-        String query = "SELECT MAX(" + seriesIdColumnName + ") " + tableName;
+    public List<ThermoSeries> getLatestThermoMeasurementsInRange(int firstSeries, int lastSeries) {
 
-        try (
+        try {
+            String query = "SELECT t.series_id, t.collection_time_period, t.hot_water_temperature, t.solar_flux, t.water_flow, t.efficiency " +
+                "FROM thermo_measurements t " +
+                "JOIN (" +
+                "    SELECT series_id, MAX(timestamp) AS latest_timestamp " +
+                "    FROM thermo_measurements " +
+                "    WHERE series_id >= ? AND series_id <= ? " +
+                "    GROUP BY series_id" +
+                ") m ON t.series_id = m.series_id AND t.timestamp = m.latest_timestamp";
+
             PreparedStatement statement = connection.prepareStatement(query);
-            ResultSet rs = statement.executeQuery()) {
-            if (rs.next()) {
-                return rs.getInt(1);
+            statement.setInt(1, firstSeries);
+            statement.setInt(2, lastSeries);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int seriesId = resultSet.getInt("series_id");
+                int collectionTimePeriod = resultSet.getInt("collection_time_period");
+                double hotWaterTemperature = resultSet.getDouble("hot_water_temperature");
+                double solarFlux = resultSet.getDouble("solar_flux");
+                double waterFlow = resultSet.getDouble("water_flow");
+                double efficiency = resultSet.getDouble("efficiency");
+
+                ThermoSeries thermoSeries = new ThermoSeries(seriesId, collectionTimePeriod, hotWaterTemperature, solarFlux, waterFlow, efficiency);
+                thermoSeriesForTable.add(thermoSeries);
             }
+
+            resultSet.close();
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 0;
+
+        return thermoSeriesForTable;
     }
 
-    public int getMinSeriesId(String tableName) {
-        String seriesIdColumnName = getSeriesIdColumnName(tableName);
-        String query = "SELECT MIN(" + seriesIdColumnName + ") " + tableName;
-        try (
-            PreparedStatement statement = connection.prepareStatement(query);
-            ResultSet rs = statement.executeQuery()) {
-            if (rs.next()) {
-                return rs.getInt(1);
+
+
+    public int getMaxSeriesId(String seriesType) {
+        int maxSeriesId = 0;
+
+        try {
+            String query = "";
+            if (seriesType.equalsIgnoreCase("photovoltaic")) {
+                query = "SELECT MAX(pv_series_id) AS max_series_id FROM ejby_company.pv_series";
+            } else if (seriesType.equalsIgnoreCase("thermo")) {
+                query = "SELECT MAX(thermo_series_id) AS max_series_id FROM ejby_company.thermo_series";
+            } else {
+                System.out.println("Invalid series type. Please provide either 'photovoltaic' or 'thermo'.");
+                return maxSeriesId;
             }
+
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                maxSeriesId = resultSet.getInt("max_series_id");
+            }
+
+            resultSet.close();
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 0;
+
+        return maxSeriesId;
     }
 
+
+    public int getMinSeriesId(String seriesType) {
+        int minSeriesId = 0;
+
+        try {
+            String query = "";
+            if (seriesType.equalsIgnoreCase("photovoltaic")) {
+                query = "SELECT MIN(pv_series_id) AS min_series_id FROM ejby_company.pv_series";
+            } else if (seriesType.equalsIgnoreCase("thermo")) {
+                query = "SELECT MIN(thermo_series_id) AS min_series_id FROM ejby_company.thermo_series";
+            } else {
+                System.out.println("Invalid series type. Please provide either 'photovoltaic' or 'thermo'.");
+                return minSeriesId;
+            }
+
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                minSeriesId = resultSet.getInt("min_series_id");
+            }
+
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return minSeriesId;
+    }
+
+    public int getFirstSeries()
+    {
+        return firstSeries;
+    }
+
+    public void setFirstSeries(int firstSeries)
+    {
+        this.firstSeries = firstSeries;
+    }
+
+    public int getFinalSeries()
+    {
+        return finalSeries;
+    }
+
+    public void setFinalSeries(int finalSeries)
+    {
+        this.finalSeries = finalSeries;
+    }
 
     public void closeConnection() {
         try {
