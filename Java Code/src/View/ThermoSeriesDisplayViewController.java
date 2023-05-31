@@ -45,6 +45,10 @@ public class ThermoSeriesDisplayViewController {
     this.databaseConnector = DatabaseConnector.getInstance();
   }
 
+  public Region getRoot() {
+    return root;
+  }
+
   public void populateThermoSeriesTable(List<ThermoSeries> measurements) {
     SeriesTable.getItems().addAll(measurements);
   }

@@ -31,6 +31,7 @@ public class PanelSeriesInputViewController
     @FXML private ChoiceBox<String> TypeChoiceBox;
 
     private DatabaseConnector databaseConnector;
+    private String seriesType;
 
     public void init(ViewHandler viewHandler, Region root, DatabaseConnector databaseConnector)
     {

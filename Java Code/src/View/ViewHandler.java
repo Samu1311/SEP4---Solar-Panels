@@ -221,8 +221,9 @@ public class ViewHandler {
                 e.printStackTrace();
             }
         }
-        return PVSeriesDisplayViewController.getRoot();
+        return thermoSeriesDisplayViewController.getRoot();
     }
+
 
     private Region loadSolarPanelEditView(String fxmlFile) {
         if (solarPanelEditViewController == null) {
